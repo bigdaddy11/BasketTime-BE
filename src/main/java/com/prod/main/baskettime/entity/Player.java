@@ -12,6 +12,7 @@ public class Player {
     private String lastName;
     private Integer teamId;  // 팀 ID
     private String weight;  
+    private String height;
     private String position;
     private String jerseyNumber;
     private Integer draftYear;
@@ -39,6 +40,13 @@ public class Player {
     }
     public void setWeight(String weight) {
         this.weight = weight;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+    public void setHeight(String height) {
+        this.height = height;
     }
 
     public String getPosition() {

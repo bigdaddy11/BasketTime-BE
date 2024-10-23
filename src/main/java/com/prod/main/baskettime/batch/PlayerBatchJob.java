@@ -23,7 +23,7 @@ import jakarta.transaction.Transactional;
 public class PlayerBatchJob {
 
     private final String API_URL = "https://api.balldontlie.io/v1/players";
-    private final String API_KEY = "9416c152-516e-4433-83ae-cafbf7114631";;  // 여기에 API_KEY 입력
+    private final String API_KEY = "9416c152-516e-4433-83ae-cafbf7114631";  // 여기에 API_KEY 입력
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
@@ -79,6 +79,7 @@ public class PlayerBatchJob {
                         }
                         //player.setTeamId((Integer) playerData.get("team").get("id"));
                         player.setWeight((String) playerData.get("weight"));
+                        player.setHeight((String) playerData.get("height"));
                         player.setPosition((String) playerData.get("position"));
                         player.setJerseyNumber((String) playerData.get("jersey_number"));
                         player.setDraftYear((Integer) playerData.get("draft_year"));

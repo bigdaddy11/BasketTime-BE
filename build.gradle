@@ -36,4 +36,5 @@ tasks.named('test') {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
     options.release.set(19)
+	options.compilerArgs << '-parameters'
 }
