@@ -19,3 +19,18 @@ spring:
     task:
         scheduling:
             enabled: "true"
+
+    security:
+        oauth2:
+            client:
+                registration:
+                    google:
+                        client-id: 94369390250-qhr7ger2mipm39827emlfdsqacce3egc.apps.googleusercontent.com
+                        client-secret: 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
+                        scope: profile, email
+                        redirect-uri: "{baseUrl}/login/oauth2/google"
+                provider:
+                    google:
+                        authorization-uri: https://accounts.google.com/o/oauth2/auth
+                        token-uri: https://oauth2.googleapis.com/token
+                        user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
