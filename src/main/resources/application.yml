@@ -19,6 +19,10 @@ spring:
     task:
         scheduling:
             enabled: "true"
+    jackson:
+        default-property-inclusion: non-null
+        serialization:
+            WRITE_DATES_AS_TIMESTAMPS: false
 
     security:
         oauth2:
@@ -34,3 +38,7 @@ spring:
                         authorization-uri: https://accounts.google.com/o/oauth2/auth
                         token-uri: https://oauth2.googleapis.com/token
                         user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+
+logging: 
+    level: 
+        root: INFO

@@ -21,6 +21,8 @@ public class Match {
     private String classType;  // Class 필드명과 중복되지 않도록 변경
     private String vs;
     private String courtId;
+    private String courtName;
+
     private Date matchDate;
 
     // 등록일자
@@ -31,6 +33,14 @@ public class Match {
     // 수정일자
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -70,6 +80,14 @@ public class Match {
 
     public void setCourtId(String courtId) {
         this.courtId = courtId;
+    }
+
+    public String getCourtName() {
+        return courtName;
+    }
+
+    public void setCourtName(String courtName) {
+        this.courtName = courtName;
     }
 
     public Date getMatchDate() {
