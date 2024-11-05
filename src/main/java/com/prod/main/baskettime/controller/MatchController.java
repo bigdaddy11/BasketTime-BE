@@ -38,7 +38,6 @@ public class MatchController {
         @RequestParam("courtId") String courtId,
         @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         List<Match> matchs = matchService.getMatchByCourtId(courtId, date);
-        matchs.forEach(match -> logger.info("Match ID: {}", match.getId()));
         return ResponseEntity.ok(matchs);
     }
 

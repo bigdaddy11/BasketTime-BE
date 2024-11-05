@@ -11,17 +11,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .csrf().disable()   // CSRF가 필요 없을 경우 비활성화
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/**").permitAll()  // Replace .antMatchers with .requestMatchers
+                .requestMatchers("/api/**","/oauth2/**").permitAll()  // Replace .antMatchers with .requestMatchers
                 .anyRequest().authenticated()
             )
-            .csrf().disable();   // CSRF가 필요 없을 경우 비활성화
-            //.oauth2Login();  
-                //.anyRequest().authenticated()
-            //);
-            //.oauth2Login(); 
-// Configure OAuth2 login
-
+            .oauth2Login()
+                .defaultSuccessUrl("/api/auth/google/callback", true);  
         return http.build();
     }
 }
