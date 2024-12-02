@@ -15,18 +15,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "category")
 @EntityListeners(AuditingEntityListener.class)  // 엔티티 리스너 추가
-public class Post {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "category_id", nullable = false) // 외래 키가 아님
-    private Long categoryId;
-    private Long userId;
-    private String title;
-    private String content;
+    @Column(nullable = false)
+    private String name;
+
+    private String image; // 이미지 URL
 
     // 등록일자
     @CreatedDate
@@ -45,36 +44,20 @@ public class Post {
         this.id = id;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public String getName() {
+        return name;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getImage() {
+        return image;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -92,5 +75,4 @@ public class Post {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 }

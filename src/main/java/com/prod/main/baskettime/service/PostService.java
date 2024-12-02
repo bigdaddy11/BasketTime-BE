@@ -17,9 +17,9 @@ public class PostService {
 
     public List<Post> getPostsByCategoryId(Long categoryId) {
         if (categoryId == null) {
-            return postRepository.findAll(); // 카테고리 ID가 없으면 전체 조회
+            return postRepository.findAllByOrderByIdAsc(); // 카테고리 ID가 없으면 전체 조회
         }
-        return postRepository.findByCategoryId(categoryId); // 카테고리 ID로 조회
+        return postRepository.findByCategoryIdOrderByIdAsc(categoryId); // 카테고리 ID로 조회
     }
 
     public List<Post> getAllPosts() {
