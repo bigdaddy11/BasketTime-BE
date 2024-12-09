@@ -27,6 +27,9 @@ public class Post {
     private Long userId;
     private String title;
     private String content;
+    private String nickName;
+    private String categoryName;
+    private String timeAgo;
 
     // 등록일자
     @CreatedDate
@@ -93,4 +96,27 @@ public class Post {
         this.updatedAt = updatedAt;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+    
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getTimeAgo() {
+        return timeAgo;
+    }
+
+    public void setTimeAgo(String timeAgo) {
+        this.timeAgo = timeAgo;
+    }
 }

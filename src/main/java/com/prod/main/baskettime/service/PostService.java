@@ -1,5 +1,6 @@
 package com.prod.main.baskettime.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -15,11 +16,33 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
+    // public List<Post> getPostsByCategoryId(Long categoryId) {
+    //     if (categoryId == null) {
+    //         return postRepository.findAllByOrderByIdAsc(); // 카테고리 ID가 없으면 전체 조회
+    //     }
+    //     return postRepository.findByCategoryIdOrderByIdAsc(categoryId); // 카테고리 ID로 조회
+    // }
+
     public List<Post> getPostsByCategoryId(Long categoryId) {
-        if (categoryId == null) {
-            return postRepository.findAllByOrderByIdAsc(); // 카테고리 ID가 없으면 전체 조회
+        List<Object[]> rawPosts = postRepository.findPostsWithNickName(categoryId);
+
+        // Object[] 데이터를 Post 엔티티로 변환
+        List<Post> posts = new ArrayList<>();
+        for (Object[] row : rawPosts) {
+            Post post = new Post();
+            post.setId(((Number) row[0]).longValue());
+            post.setCategoryId(((Number) row[1]).longValue());
+            post.setContent((String) row[2]);
+            post.setCreatedAt(row[3] != null ? ((java.sql.Timestamp) row[3]).toLocalDateTime() : null);
+            post.setTitle((String) row[4]);
+            post.setUpdatedAt(row[5] != null ? ((java.sql.Timestamp) row[5]).toLocalDateTime() : null);
+            post.setUserId(((Number) row[6]).longValue());
+            post.setNickName((String) row[7]);
+            post.setCategoryName((String) row[8]);
+            post.setTimeAgo((String) row[9]);
+            posts.add(post);
         }
-        return postRepository.findByCategoryIdOrderByIdAsc(categoryId); // 카테고리 ID로 조회
+        return posts;
     }
 
     public List<Post> getAllPosts() {
