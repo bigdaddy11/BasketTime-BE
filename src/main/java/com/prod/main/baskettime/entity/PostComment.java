@@ -1,8 +1,8 @@
 package com.prod.main.baskettime.entity;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
-import org.hibernate.annotations.TenantId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -10,37 +10,29 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "posts")
 @EntityListeners(AuditingEntityListener.class)  // 엔티티 리스너 추가
-public class Post {
+public class PostComment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "category_id", nullable = false) // 외래 키가 아님
-    private Long categoryId;
-    private Long userId;
-    private String title;
-    private String content;
+    private Long postId;  // 댓글이 달릴 게시글 ID
+    private Long userId;    // 댓글 달은 유저
 
     @Transient // DB에 저장되지 않음
-    private String nickName;
-
-    @Transient // DB에 저장되지 않음
-    private String categoryName;
+    private String nickName;    // 댓글 달은 유저
+    
+    private String commentText; // 댓글
 
     @Transient // DB에 저장되지 않음
     private String timeAgo;
-
-    @Transient // DB에 저장되지 않음
-    private String image;
 
     // 등록일자
     @CreatedDate
@@ -59,12 +51,12 @@ public class Post {
         this.id = id;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public Long getUserId() {
@@ -75,20 +67,12 @@ public class Post {
         this.userId = userId;
     }
 
-    public String getTitle() {
-        return title;
+    public String getCommentText() {
+        return commentText;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -106,6 +90,14 @@ public class Post {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+    
+    public String getTimeAgo() {
+        return timeAgo;
+    }
+
+    public void setTimeAgo(String timeAgo) {
+        this.timeAgo = timeAgo;
+    }
 
     public String getNickName() {
         return nickName;
@@ -114,28 +106,5 @@ public class Post {
     public void setNickName(String nickName) {
         this.nickName = nickName;
     }
-    
-    public String getCategoryName() {
-        return categoryName;
-    }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public String getTimeAgo() {
-        return timeAgo;
-    }
-
-    public void setTimeAgo(String timeAgo) {
-        this.timeAgo = timeAgo;
-    }
-    
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 }

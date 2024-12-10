@@ -1,6 +1,7 @@
 package com.prod.main.baskettime.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -16,12 +17,10 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    // public List<Post> getPostsByCategoryId(Long categoryId) {
-    //     if (categoryId == null) {
-    //         return postRepository.findAllByOrderByIdAsc(); // 카테고리 ID가 없으면 전체 조회
-    //     }
-    //     return postRepository.findByCategoryIdOrderByIdAsc(categoryId); // 카테고리 ID로 조회
-    // }
+    // 게시글 ID로 조회
+    public Post getPostById(Long id) {
+        return postRepository.findById(id).orElse(null); // ID로 게시글 조회
+    }
 
     public List<Post> getPostsByCategoryId(Long categoryId) {
         List<Object[]> rawPosts = postRepository.findPostsWithNickName(categoryId);
@@ -43,6 +42,32 @@ public class PostService {
             posts.add(post);
         }
         return posts;
+    }
+
+    public Post findPostsWithId(Long id) {
+        List<Object[]> result = postRepository.findPostsWithId(id);
+        if (result == null || result.isEmpty()) {
+            throw new RuntimeException("Post not found with id: " + id);
+        }
+        Object[] row = result.get(0);
+        return mapToPost(row);
+    }
+
+    private Post mapToPost(Object[] row) {
+        Post post = new Post();
+        // 각 Object[]의 인덱스에 맞는 데이터 타입으로 변환
+        post.setContent((String) row[2]); // String
+        post.setId(((Number) row[0]).longValue()); // Long (숫자 변환)
+        post.setCategoryId(((Long) row[1])); // Long
+        post.setCreatedAt(row[3] != null ? ((java.sql.Timestamp) row[3]).toLocalDateTime() : null);
+        post.setTitle((String) row[4]); // String
+        post.setUpdatedAt(row[5] != null ? ((java.sql.Timestamp) row[5]).toLocalDateTime() : null);
+        post.setUserId(((Long) row[6])); // Long
+        post.setNickName((String) row[7]); // String
+        post.setCategoryName((String) row[8]); // String
+        post.setTimeAgo((String) row[9]); // String
+        post.setImage((String) row[10]); // String
+        return post;
     }
 
     public List<Post> getAllPosts() {
