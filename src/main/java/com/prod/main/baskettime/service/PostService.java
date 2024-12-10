@@ -22,8 +22,8 @@ public class PostService {
         return postRepository.findById(id).orElse(null); // ID로 게시글 조회
     }
 
-    public List<Post> getPostsByCategoryId(Long categoryId) {
-        List<Object[]> rawPosts = postRepository.findPostsWithNickName(categoryId);
+    public List<Post> getPostsByCategoryId(Long categoryId, Long userId) {
+        List<Object[]> rawPosts = postRepository.findPostsWithNickName(categoryId, userId);
 
         // Object[] 데이터를 Post 엔티티로 변환
         List<Post> posts = new ArrayList<>();
@@ -39,6 +39,10 @@ public class PostService {
             post.setNickName((String) row[7]);
             post.setCategoryName((String) row[8]);
             post.setTimeAgo((String) row[9]);
+            post.setCommentCount(((Number) row[10]).longValue());
+            post.setLikeCount(((Number) row[11]).longValue());
+            post.setViewCount(((Number) row[12]).longValue());
+            post.setIsLiked((Boolean) row[13]);
             posts.add(post);
         }
         return posts;

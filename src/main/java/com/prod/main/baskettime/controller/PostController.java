@@ -29,8 +29,10 @@ public class PostController {
 
     // 카테고리별 조회
     @GetMapping
-    public ResponseEntity<List<Post>> getPostsByCategory(@RequestParam(name = "categoryId", required = false) Long categoryId) {
-        List<Post> posts = postService.getPostsByCategoryId(categoryId);
+    public ResponseEntity<List<Post>> getPostsByCategory(
+        @RequestParam(name = "categoryId", required = false) Long categoryId,
+        @RequestParam(name = "userId", required = false) Long userId) {
+        List<Post> posts = postService.getPostsByCategoryId(categoryId, userId);
         return ResponseEntity.ok(posts);
     }
 

@@ -42,6 +42,18 @@ public class Post {
     @Transient // DB에 저장되지 않음
     private String image;
 
+    @Transient // DB에 저장되지 않음
+    private Long commentCount;
+
+    @Transient // DB에 저장되지 않음
+    private Long likeCount;
+
+    @Transient // DB에 저장되지 않음
+    private Long viewCount;
+
+    @Transient // DB에 저장되지 않음
+    private Boolean isLiked;
+
     // 등록일자
     @CreatedDate
     @Column(updatable = false)
@@ -137,5 +149,37 @@ public class Post {
 
     public void setImage(String image) {
         this.image = image;
+    }
+    
+    public Long getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Long getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public Long getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(Long viewCount) {
+        this.viewCount = viewCount;
+    }
+
+    public Boolean getIsLiked() {
+        return isLiked;
+    }
+
+    public void setIsLiked(Boolean isLiked) {
+        this.isLiked = isLiked;
     }
 }
