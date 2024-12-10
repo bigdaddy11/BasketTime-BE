@@ -47,12 +47,19 @@ public class InteractionService {
     }
 
     // 조회수 추가
-    public void addView(Long relationId, Long userId) {
-        View view = new View();
-        view.setRelationId(relationId);
-        view.setUserId(userId); // NULL 가능
-        view.setViewedAt(LocalDateTime.now());
-        viewRepository.save(view);
+    @Transactional
+    public void addView(Long relationId, Long userId, String type) {
+        // 동일 유저의 동일 게시물 조회 여부 확인
+        boolean exists = viewRepository.existsByRelationIdAndUserIdAndType(relationId, userId, type);
+
+        if (!exists) {
+            View view = new View();
+            view.setRelationId(relationId);
+            view.setUserId(userId);
+            view.setType(type);
+            view.setCreatedAt(LocalDateTime.now());
+            viewRepository.save(view);
+        }
     }
 
     // 조회수 계산

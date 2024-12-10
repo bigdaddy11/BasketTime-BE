@@ -49,8 +49,11 @@ public class InteractionController {
 
     // 조회수 추가
     @PostMapping("/views")
-    public ResponseEntity<Void> addView(@PathVariable("relationId") Long relationId, @RequestParam(required = false) Long userId) {
-        interactionService.addView(relationId, userId);
+    public ResponseEntity<Void> addView(@RequestBody Map<String, Object> payload) {
+        Long relationId = ((Number) payload.get("relationId")).longValue();
+        Long userId = ((Number) payload.get("userId")).longValue();
+        String type = (String) payload.get("type");
+        interactionService.addView(relationId, userId, type);
         return ResponseEntity.ok().build();
     }
 

@@ -9,4 +9,5 @@ import com.prod.main.baskettime.entity.View;
 public interface ViewRepository extends JpaRepository<View, Long> {
     List<View> findByRelationId(Long relationId);
     long countByRelationId(Long relationId); // 조회수 계산
+    boolean existsByRelationIdAndUserIdAndType(Long relationId, Long userId, String type);
 }

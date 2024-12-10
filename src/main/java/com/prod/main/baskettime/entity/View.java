@@ -26,7 +26,7 @@ public class View {
     private Long userId; // NULL 허용
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime viewedAt;
+    private LocalDateTime createdAt;
 
     public Long getId() {
         return id;
@@ -59,12 +59,12 @@ public class View {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-
-    public LocalDateTime getViewedAt() {
-        return viewedAt;
+    
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setViewedAt(LocalDateTime viewedAt) {
-        this.viewedAt = viewedAt;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

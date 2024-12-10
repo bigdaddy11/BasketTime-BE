@@ -23,20 +23,22 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             WHEN AGE(NOW(), a.created_at) < INTERVAL '3 day' THEN '2일 전'
             ELSE TO_CHAR(a.created_at, '오래 전') -- 그 외에는 원본 날짜 출력
         END AS time_ago,
-        COUNT(pc.id) AS comment_count,
-        COUNT(DISTINCT l.id) AS like_count,    -- 좋아요 수
-        COUNT(DISTINCT v.id) AS view_count,     -- 조회수
-        (SELECT COUNT(*) > 0 
-            FROM likes 
-            WHERE relation_id = a.id AND user_id = :userId) AS is_liked -- 좋아요 여부
+        (SELECT COUNT(*) 
+            FROM post_comment pc 
+            WHERE pc.post_id = a.id) AS comment_count, -- 댓글 수
+        (SELECT COUNT(DISTINCT l.id) 
+            FROM likes l 
+            WHERE l.relation_id = a.id AND l.type = 'P') AS like_count, -- 좋아요 수
+        (SELECT COUNT(DISTINCT v.id) 
+            FROM views v 
+            WHERE v.relation_id = a.id AND v.type = 'P') AS view_count, -- 조회수
+        (SELECT COUNT(*) > 0
+            FROM likes l
+            WHERE l.relation_id = a.id AND l.user_id = :userId AND l.type = 'P') AS is_liked -- 좋아요 여부
         FROM posts a
         LEFT JOIN users b ON a.user_id = b.id
         LEFT JOIN category c on a.category_id = c.id
-        LEFT JOIN post_comment pc ON a.id = pc.post_id -- 댓글 테이블과 조인
-        LEFT JOIN likes l ON a.id = l.relation_id AND l.type = 'P'    -- 좋아요 테이블과 조인
-        LEFT JOIN views v ON a.id = v.relation_id AND v.type = 'P'    -- 조회수 테이블과 조인
         WHERE (:categoryId IS NULL OR a.category_id = :categoryId)
-        GROUP BY a.id, a.category_id, a.content, a.created_at, a.title, a.updated_at, a.user_id, b.nick_name, c.name
         ORDER BY a.id DESC
     """, nativeQuery = true)
     List<Object[]> findPostsWithNickName(@Param("categoryId") Long categoryId, @Param("userId") Long userId);
