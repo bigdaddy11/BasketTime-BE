@@ -3,7 +3,11 @@ package com.prod.main.baskettime.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import com.prod.main.baskettime.entity.Post;
@@ -22,12 +26,12 @@ public class PostService {
         return postRepository.findById(id).orElse(null); // ID로 게시글 조회
     }
 
-    public List<Post> getPostsByCategoryId(Long categoryId, Long userId) {
-        List<Object[]> rawPosts = postRepository.findPostsWithNickName(categoryId, userId);
+    public Page<Post> getPostsByCategoryId(Long categoryId, Long userId, Pageable pageable) {
+        // Raw data 가져오기
+        List<Object[]> rawPosts = postRepository.findPostsWithNickName(categoryId, userId, pageable.getOffset(), pageable.getPageSize());
 
         // Object[] 데이터를 Post 엔티티로 변환
-        List<Post> posts = new ArrayList<>();
-        for (Object[] row : rawPosts) {
+        List<Post> posts = rawPosts.stream().map(row -> {
             Post post = new Post();
             post.setId(((Number) row[0]).longValue());
             post.setCategoryId(((Number) row[1]).longValue());
@@ -43,9 +47,14 @@ public class PostService {
             post.setLikeCount(((Number) row[11]).longValue());
             post.setViewCount(((Number) row[12]).longValue());
             post.setIsLiked((Boolean) row[13]);
-            posts.add(post);
-        }
-        return posts;
+            return post;
+        }).collect(Collectors.toList());
+
+        // Total count 가져오기
+        long total = postRepository.countPostsWithNickName(categoryId);
+
+        // Page 객체 생성
+        return new PageImpl<>(posts, pageable, total);
     }
 
     public Post findPostsWithId(Long id) {

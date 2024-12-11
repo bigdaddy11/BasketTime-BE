@@ -2,6 +2,8 @@ package com.prod.main.baskettime.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,8 +42,20 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         LEFT JOIN category c on a.category_id = c.id
         WHERE (:categoryId IS NULL OR a.category_id = :categoryId)
         ORDER BY a.id DESC
+        OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY
+        """, nativeQuery = true)
+List<Object[]> findPostsWithNickName(
+    @Param("categoryId") Long categoryId,
+    @Param("userId") Long userId,
+    @Param("offset") Long offset,
+    @Param("limit") int limit);
+
+    @Query(value = """
+        SELECT COUNT(*)
+        FROM posts a
+        WHERE (:categoryId IS NULL OR a.category_id = :categoryId)
     """, nativeQuery = true)
-    List<Object[]> findPostsWithNickName(@Param("categoryId") Long categoryId, @Param("userId") Long userId);
+    long countPostsWithNickName(@Param("categoryId") Long categoryId);
 
     @Query(value = """
         SELECT a.id, a.category_id, a.content, a.created_at, a.title, a.updated_at, a.user_id, b.nick_name, c.name as category_name,

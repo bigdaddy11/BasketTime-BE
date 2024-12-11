@@ -3,6 +3,9 @@ package com.prod.main.baskettime.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +32,11 @@ public class PostController {
 
     // 카테고리별 조회
     @GetMapping
-    public ResponseEntity<List<Post>> getPostsByCategory(
+    public ResponseEntity<Page<Post>> getPostsByCategory(
         @RequestParam(name = "categoryId", required = false) Long categoryId,
-        @RequestParam(name = "userId", required = false) Long userId) {
-        List<Post> posts = postService.getPostsByCategoryId(categoryId, userId);
+        @RequestParam(name = "userId", required = false) Long userId,
+        Pageable pageable) {
+        Page<Post> posts = postService.getPostsByCategoryId(categoryId, userId, pageable);
         return ResponseEntity.ok(posts);
     }
 
