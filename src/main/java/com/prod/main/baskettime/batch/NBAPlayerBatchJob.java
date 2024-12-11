@@ -20,7 +20,7 @@ import com.prod.main.baskettime.repository.PlayerRepository;
 import jakarta.transaction.Transactional;
 
 @Component
-public class PlayerBatchJob {
+public class NBAPlayerBatchJob {
 
     private final String API_URL = "https://api.balldontlie.io/v1/players";
     private final String API_KEY = "9416c152-516e-4433-83ae-cafbf7114631";  // 여기에 API_KEY 입력

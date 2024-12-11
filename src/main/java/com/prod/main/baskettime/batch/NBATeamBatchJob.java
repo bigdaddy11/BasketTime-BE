@@ -22,7 +22,7 @@ import com.prod.main.baskettime.repository.TeamRepository;
 import jakarta.transaction.Transactional;
 
 @Component
-public class TeamBatchJob {
+public class NBATeamBatchJob {
     private final String API_URL = "https://api.balldontlie.io/v1/teams";
     private final String API_KEY = "9416c152-516e-4433-83ae-cafbf7114631";
     private final RestTemplate restTemplate = new RestTemplate();

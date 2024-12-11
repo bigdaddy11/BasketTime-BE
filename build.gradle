@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.5'
+	id 'org.springframework.boot' version '3.3.0'
 	id 'io.spring.dependency-management' version '1.1.6'
 }
 
@@ -8,10 +8,10 @@ group = 'com.prod.main'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_23
-    targetCompatibility = JavaVersion.VERSION_23
+	sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(23)
+		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
 
@@ -28,11 +28,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.security:spring-security-oauth2-jose'
+	implementation 'org.jsoup:jsoup:1.16.1'
+
 	runtimeOnly 'org.postgresql:postgresql'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
 }
 
 tasks.named('test') {
@@ -41,6 +42,6 @@ tasks.named('test') {
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-    options.release.set(23)
+    options.release.set(17)
 	options.compilerArgs << '-parameters'
 }

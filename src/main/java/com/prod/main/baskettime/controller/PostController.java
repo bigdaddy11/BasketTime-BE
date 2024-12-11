@@ -68,13 +68,13 @@ public class PostController {
 
     // 게시글 수정
     @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody Post updatedPost) {
+    public ResponseEntity<Post> updatePost(@PathVariable("id") Long id, @RequestBody Post updatedPost) {
         return ResponseEntity.ok(postService.updatePost(id, updatedPost));
     }
 
     // 게시글 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePost(@PathVariable("id") Long id) {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
