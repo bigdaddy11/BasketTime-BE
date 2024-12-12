@@ -11,6 +11,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 import java.time.LocalDateTime;
 
@@ -26,6 +27,12 @@ public class PlayerComment {
     private Long playerId;  // 댓글이 달린 선수의 ID
     private Long userId;    // 댓글 달은 유저
     private String commentText; // 댓글
+
+    @Transient // DB에 저장되지 않음
+    private String nickName;
+
+    @Transient // DB에 저장되지 않음
+    private String timeAgo;
 
     // 등록일자
     @CreatedDate
@@ -95,4 +102,20 @@ public class PlayerComment {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-}
+    
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getTimeAgo() {
+        return timeAgo;
+    }
+
+    public void setTimeAgo(String timeAgo) {
+        this.timeAgo = timeAgo;
+    }
+};
