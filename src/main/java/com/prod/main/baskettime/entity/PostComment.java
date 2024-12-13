@@ -23,13 +23,15 @@ public class PostComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long postId;  // 댓글이 달릴 게시글 ID
+    private Long relationId;  // 댓글이 달릴 게시글 ID
     private Long userId;    // 댓글 달은 유저
 
     @Transient // DB에 저장되지 않음
     private String nickName;    // 댓글 달은 유저
     
     private String commentText; // 댓글
+
+    private String type; // 댓글타입
 
     @Transient // DB에 저장되지 않음
     private String timeAgo;
@@ -51,12 +53,12 @@ public class PostComment {
         this.id = id;
     }
 
-    public Long getPostId() {
-        return postId;
+    public Long getRelationId() {
+        return relationId;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
+    public void setRelationId(Long relationId) {
+        this.relationId = relationId;
     }
 
     public Long getUserId() {
@@ -105,6 +107,14 @@ public class PostComment {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+    
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }

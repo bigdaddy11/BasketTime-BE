@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.prod.main.baskettime.entity.Post;
@@ -27,19 +28,19 @@ public class PostCommentController {
     }
 
     // 특정 게시글의 댓글 목록 조회
-    @GetMapping("/{postId}")
-    public ResponseEntity<List<PostComment>> getCommentsByPostId(@PathVariable("postId") Long postId) {
-        List<PostComment> comments = postCommentService.getPostCommentsByPostId(postId);
+    @GetMapping("/{relationId}")
+    public ResponseEntity<List<PostComment>> getCommentsByPostId(@PathVariable("relationId") Long relationId,  @RequestParam(name = "type", required = false) String type) {
+        List<PostComment> comments = postCommentService.getPostCommentsByPostId(relationId, type);
         return ResponseEntity.ok(comments);
     }
 
     // 댓글 작성
-    @PostMapping("/{postId}")
+    @PostMapping("/{relationId}")
     public ResponseEntity<PostComment> addComment(
-            @PathVariable("postId") Long postId,
+            @PathVariable("relationId") Long relationId,
             @RequestBody PostComment commentText
     ) {
-        commentText.setPostId(postId); // URL의 postId 설정
+        commentText.setRelationId(relationId); // URL의 postId 설정
         PostComment savedComment = postCommentService.addComment(commentText);
         return ResponseEntity.status(201).body(savedComment);
     }

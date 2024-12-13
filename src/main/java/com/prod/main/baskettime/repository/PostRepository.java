@@ -27,7 +27,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         END AS time_ago,
         (SELECT COUNT(*) 
             FROM post_comment pc 
-            WHERE pc.post_id = a.id) AS comment_count, -- 댓글 수
+            WHERE pc.relation_id = a.id AND pc.type = 'P') AS comment_count, -- 댓글 수
         (SELECT COUNT(DISTINCT l.id) 
             FROM likes l 
             WHERE l.relation_id = a.id AND l.type = 'P') AS like_count, -- 좋아요 수

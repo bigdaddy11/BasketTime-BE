@@ -13,6 +13,6 @@ public class CommentService {
     }
 
     public long getCommentCount(Long postId) {
-        return commentRepository.countByPostId(postId);
+        return commentRepository.countByRelationId(postId);
     }
 }

@@ -18,8 +18,8 @@ public class PostCommentService {
         this.postCommentRepository = postCommentRepository;
     }
 
-    public List<PostComment> getPostCommentsByPostId(Long postId) {
-        List<Object[]> rawPosts = postCommentRepository.findPostCommentWithNickName(postId);
+    public List<PostComment> getPostCommentsByPostId(Long postId, String type) {
+        List<Object[]> rawPosts = postCommentRepository.findPostCommentWithNickName(postId, type);
 
         // Object[] 데이터를 Post 엔티티로 변환
         List<PostComment> postComments = new ArrayList<>();
@@ -36,7 +36,7 @@ public class PostCommentService {
     }
     // 특정 게시글의 댓글 가져오기
     public List<PostComment> getCommentsByPostId(Long postId) {
-        return postCommentRepository.findByPostIdOrderByCreatedAtAsc(postId);
+        return postCommentRepository.findByRelationIdOrderByCreatedAtAsc(postId);
     }
 
     // 댓글 작성

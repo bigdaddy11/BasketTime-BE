@@ -11,7 +11,7 @@ import com.prod.main.baskettime.entity.PostComment;
 
 @Repository
 public interface PostCommentRepository extends JpaRepository<PostComment, Long> {
-    List<PostComment> findByPostIdOrderByCreatedAtAsc(Long postId); // 특정 게시글의 댓글을 시간순 정렬
+    List<PostComment> findByRelationIdOrderByCreatedAtAsc(Long postId); // 특정 게시글의 댓글을 시간순 정렬
 
     @Query(value = """
         SELECT a.id,
@@ -28,8 +28,9 @@ public interface PostCommentRepository extends JpaRepository<PostComment, Long> 
             a.user_id
         FROM post_comment a
         LEFT JOIN users b ON a.user_id = b.id
-        WHERE (:postId IS NULL OR a.post_id = :postId)
+        WHERE (:postId IS NULL OR a.relation_id = :postId)
+          AND (:type IS NULL OR a.type = :type)
         ORDER BY a.id ASC
     """, nativeQuery = true)
-    List<Object[]> findPostCommentWithNickName(@Param("postId") Long postId);
+    List<Object[]> findPostCommentWithNickName(@Param("postId") Long postId, @Param("type") String type);
 }
