@@ -43,17 +43,4 @@ public class PlayerCommentService {
         }
         return posts;
     }
-
-    private PlayerComment mapToPost(Object[] row) {
-        PlayerComment post = new PlayerComment();
-        // 각 Object[]의 인덱스에 맞는 데이터 타입으로 변환
-        post.setId(((Number) row[0]).longValue()); // Long (숫자 변환)
-        post.setCommentText(((String) row[1])); // Long
-        post.setPlayerId(((Number) row[2]).longValue());
-        post.setType(((String) row[3]));
-        post.setUserId(((Number) row[4]).longValue());
-        post.setNickName(((String) row[5]));
-        post.setTimeAgo(((String) row[6]));
-        return post;
-    }
 }

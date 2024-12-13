@@ -24,7 +24,8 @@ public interface PostCommentRepository extends JpaRepository<PostComment, Long> 
                 WHEN AGE(NOW(), a.created_at) < INTERVAL '2 day' THEN '1일 전'
                 WHEN AGE(NOW(), a.created_at) < INTERVAL '3 day' THEN '2일 전'
                 ELSE TO_CHAR(a.created_at, '오래 전') -- 그 외에는 원본 날짜 출력
-            END AS time_ago
+            END AS time_ago,
+            a.user_id
         FROM post_comment a
         LEFT JOIN users b ON a.user_id = b.id
         WHERE (:postId IS NULL OR a.post_id = :postId)

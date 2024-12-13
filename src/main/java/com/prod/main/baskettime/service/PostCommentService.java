@@ -29,7 +29,7 @@ public class PostCommentService {
             postComment.setCommentText((String) row[1]);
             postComment.setNickName((String) row[2]);
             postComment.setTimeAgo((String) row[3]);
-
+            postComment.setUserId(((Number) row[4]).longValue());
             postComments.add(postComment);
         }
         return postComments;
@@ -43,5 +43,23 @@ public class PostCommentService {
     @Transactional
     public PostComment addComment(PostComment comment) {
         return postCommentRepository.save(comment);
+    }
+
+    // 댓글 수정
+    public PostComment updateComment(Long id, PostComment postComment) {
+        return postCommentRepository.findById(id)
+                .map(comment -> {
+                    System.out.println(id);
+                    System.out.println(postComment.getCommentText());
+                    comment.setCommentText(postComment.getCommentText());
+                    return postCommentRepository.save(comment);
+                })
+                .orElseThrow(() -> new RuntimeException("Comment not found with id " + id));
+    }
+
+    // 댓글 삭제
+    @Transactional
+    public void deleteCommentById(Long id) {
+        postCommentRepository.deleteById(id);
     }
 }

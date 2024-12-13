@@ -36,4 +36,11 @@ public class PlayersCommentController {
         PlayerComment savedComment = playerCommentRepository.save(comment);
         return ResponseEntity.ok(savedComment);
     }
+
+    // 댓글 삭제
+    @DeleteMapping("/{id}/{type}")
+    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long id) {
+        playerCommentRepository.deleteById(id); // 서비스 호출
+        return ResponseEntity.noContent().build();
+    }
 }
