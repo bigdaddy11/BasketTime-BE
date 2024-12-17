@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.prod.main.baskettime.entity.Team;
 
 public interface TeamRepository extends JpaRepository<Team, Integer> {
+    Team findByFullName(String fullName);
 }

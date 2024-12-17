@@ -1,12 +1,16 @@
 package com.prod.main.baskettime.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
  
 @Entity
 public class Player {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가
     private Integer id;  // 플레이어 ID
     private String firstName;
     private String lastName;
@@ -20,8 +24,11 @@ public class Player {
     private Integer draftNumber;
     private String country;
     private String college;
+    private String type;
 
-    
+    @Transient // DB에 저장되지 않음
+    private String teamName;
+
     // getter, setter 추가
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -92,5 +99,19 @@ public class Player {
     }
     public void setDraftNumber(Integer draftNumber) {
         this.draftNumber = draftNumber;
+    }
+    
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
+    
+    public String getTeamName() {
+        return teamName;
+    }
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
     }
 }

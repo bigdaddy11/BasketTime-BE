@@ -60,6 +60,7 @@ public class NBATeamBatchJob {
                     team.setName((String) teamData.get("name"));
                     team.setFullName((String) teamData.get("full_name"));
                     team.setAbbreviation((String) teamData.get("abbreviation"));
+                    team.setType("N");
                     allTeams.add(team);
                 }
 

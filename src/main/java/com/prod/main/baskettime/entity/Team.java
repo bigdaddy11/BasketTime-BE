@@ -1,6 +1,8 @@
 package com.prod.main.baskettime.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
@@ -14,6 +16,7 @@ public class Team {
     private String name;
     private String fullName;
     private String abbreviation;
+    private String type;
 
     // Getters and setters
     public Integer getId() { return id; }
@@ -36,5 +39,8 @@ public class Team {
 
     public String getAbbreviation() { return abbreviation; }
     public void setAbbreviation(String abbreviation) { this.abbreviation = abbreviation; }
+
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 }
 

@@ -12,6 +12,10 @@ spring:
         hibernate:
             ddl-auto: update
         show-sql: true
+        properties:
+            hibernate:
+                id:
+                    new_generator_mappings: true
 
     mvc:
         static-path-pattern: /**

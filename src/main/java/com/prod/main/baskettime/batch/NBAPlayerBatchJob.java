@@ -87,7 +87,7 @@ public class NBAPlayerBatchJob {
                         player.setDraftNumber((Integer) playerData.get("draft_number"));
                         player.setCountry((String) playerData.get("country"));
                         player.setCollege((String) playerData.get("college"));
-                        
+                        player.setType("N");
                         allPlayers.add(player);
                     }
 
@@ -97,8 +97,8 @@ public class NBAPlayerBatchJob {
             }
 
             // DB에 저장 (기존 데이터 삭제 후 다시 저장)
-            playerRepository.deleteAll();
-            playerRepository.saveAll(allPlayers);
+            //playerRepository.deleteByType("N");
+            //playerRepository.saveAll(allPlayers);
         } catch (Exception e) {
             e.printStackTrace();
         }
