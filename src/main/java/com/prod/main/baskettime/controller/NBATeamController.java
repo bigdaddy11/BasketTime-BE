@@ -13,15 +13,21 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/nba")
+@RequestMapping("/api/teams")
 public class NBATeamController {
 
     @Autowired
     private TeamRepository teamRepository;
 
-    @GetMapping("/teams")
-    public ResponseEntity<List<Team>> getAllTeams() {
-        List<Team> teams = teamRepository.findAll();
+    @GetMapping("/nba")
+    public ResponseEntity<List<Team>> getNbaTeams() {
+        List<Team> teams = teamRepository.findByType("N");
+        return ResponseEntity.ok(teams);
+    }
+
+    @GetMapping("/kbl")
+    public ResponseEntity<List<Team>> getKblTeams() {
+        List<Team> teams = teamRepository.findByType("K");
         return ResponseEntity.ok(teams);
     }
 }

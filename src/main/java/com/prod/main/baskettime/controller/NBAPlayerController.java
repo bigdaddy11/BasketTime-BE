@@ -29,15 +29,21 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/nba/players")
+@RequestMapping("/api/players")
 public class NBAPlayerController {
 
     @Autowired
     private PlayerRepository playerRepository;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Player>> getAllPlayers() {
-        List<Player> players = playerRepository.findAll();
+    @GetMapping("/nba")
+    public ResponseEntity<List<Player>> getNbaPlayers() {
+        List<Player> players = playerRepository.findByType("N");
+        return ResponseEntity.ok(players);
+    }
+
+    @GetMapping("/kbl")
+    public ResponseEntity<List<Player>> getkblPlayers() {
+        List<Player> players = playerRepository.findByType("K");
         return ResponseEntity.ok(players);
     }
 }
