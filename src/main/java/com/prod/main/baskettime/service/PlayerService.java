@@ -22,7 +22,13 @@ public class PlayerService {
     public void saveOrUpdatePlayers(List<Player> players) {
         for (Player player : players) {
             // 1. 팀 이름으로 팀 ID 조회
-            Team team = teamRepository.findByFullName(player.getTeamName());
+            Team team = new Team();
+            if(player.getType().equals("K")){
+                team = teamRepository.findByFullName(player.getTeamName());
+            }else{
+                team = teamRepository.findByAbbreviation(player.getTeamName());
+            }
+            
 
             if (team != null) {
                 player.setTeamId(team.getId()); // Team ID 세팅

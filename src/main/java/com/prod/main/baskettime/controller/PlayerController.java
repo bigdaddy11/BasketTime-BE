@@ -30,7 +30,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/players")
-public class NBAPlayerController {
+public class PlayerController {
 
     @Autowired
     private PlayerRepository playerRepository;

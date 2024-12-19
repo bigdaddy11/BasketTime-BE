@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/teams")
-public class NBATeamController {
+public class TeamController {
 
     @Autowired
     private TeamRepository teamRepository;
