@@ -27,11 +27,12 @@ public class Draw {
 
     @Column(length = 1000)  // 변경된 최대 길이에 맞춰 수정
     private String imagePath;
-    
+
     private String type;
     private String productCode;
     private String price;
     private String releaseTime;
+    private String kreamPrice;
 
     // 등록일자
     @CreatedDate
@@ -136,6 +137,14 @@ public class Draw {
 
     public void setReleaseTime(String releaseTime) {
         this.releaseTime = releaseTime;
+    }
+    
+    public String getKreamPrice() {
+        return kreamPrice;
+    }
+
+    public void setKreamPrice(String kreamPrice) {
+        this.kreamPrice = kreamPrice;
     }
 
 }

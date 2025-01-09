@@ -34,4 +34,8 @@ public class DrawService {
     public List<Draw> getDrawsByDate(LocalDate date) {
         return drawRepository.findByDrawDate(date);
     }
+
+    public List<Draw> findAllWithProductCode() {
+        return drawRepository.findByProductCodeIsNotNull();
+    }
 }

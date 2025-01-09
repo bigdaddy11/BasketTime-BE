@@ -17,4 +17,6 @@ public interface DrawRepository extends JpaRepository<Draw, Long> {
     List<Draw> findByDrawNameAndDrawDateAndDrawStyle(String drawName, LocalDate drawDate, String drawStyle);
 
     List<Draw> findByDrawDate(LocalDate drawDate);
+
+    List<Draw> findByProductCodeIsNotNull();
 }
