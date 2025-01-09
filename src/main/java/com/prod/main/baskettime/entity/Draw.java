@@ -24,8 +24,14 @@ public class Draw {
     private String drawName;
     private String drawStyle;
     private String drawLink;
+
+    @Column(length = 1000)  // 변경된 최대 길이에 맞춰 수정
     private String imagePath;
+    
     private String type;
+    private String productCode;
+    private String price;
+    private String releaseTime;
 
     // 등록일자
     @CreatedDate
@@ -107,4 +113,29 @@ public class Draw {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    public String getProductCode() {
+        return productCode;
+    }
+
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getReleaseTime() {
+        return releaseTime;
+    }
+
+    public void setReleaseTime(String releaseTime) {
+        this.releaseTime = releaseTime;
+    }
+
 }

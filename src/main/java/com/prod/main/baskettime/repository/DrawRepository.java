@@ -12,7 +12,9 @@ import java.util.List;
 @Repository
 public interface DrawRepository extends JpaRepository<Draw, Long> {
     // 동일한 이름과 날짜가 있는 데이터 검색
-    List<Draw> findByDrawNameAndDrawDate(String drawName, LocalDate drawDate);
+    List<Draw> findByDrawNameAndDrawDateAndProductCodeAndDrawStyle(String drawName, LocalDate drawDate, String productCode, String drawStyle );
+
+    List<Draw> findByDrawNameAndDrawDateAndDrawStyle(String drawName, LocalDate drawDate, String drawStyle);
 
     List<Draw> findByDrawDate(LocalDate drawDate);
 }
