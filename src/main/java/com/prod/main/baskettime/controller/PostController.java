@@ -1,7 +1,12 @@
 package com.prod.main.baskettime.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.prod.main.baskettime.entity.Post;
 import com.prod.main.baskettime.repository.PostRepository;
@@ -61,8 +67,35 @@ public class PostController {
     }
 
     // 게시글 생성
-    @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
+    // @PostMapping
+    // public ResponseEntity<Post> createPost(@RequestBody Post post) {
+    //     return ResponseEntity.ok(postService.createPost(post));
+    // }
+
+     // 게시글 생성 (이미지 포함)
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<Post> createPost(
+        @RequestParam("title") String title,
+        @RequestParam("content") String content,
+        @RequestParam("categoryId") Long categoryId,
+        @RequestParam("userId") Long userId,
+        @RequestParam(value = "images", required = false) List<MultipartFile> images) {
+
+        Post post = new Post();
+        post.setTitle(title);
+        post.setContent(content);
+        post.setCategoryId(categoryId);
+        post.setUserId(userId);
+
+        // 이미지 저장 로직 추가
+        if (images != null && !images.isEmpty()) {
+            List<String> imagePaths = images.stream()
+                                            .map(this::saveImage)
+                                            .collect(Collectors.toList());
+            post.setImagePaths(imagePaths); // Post 객체에 이미지 경로 리스트 저장
+        }
+
+
         return ResponseEntity.ok(postService.createPost(post));
     }
 
@@ -77,5 +110,25 @@ public class PostController {
     public ResponseEntity<Void> deletePost(@PathVariable("id") Long id) {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private String saveImage(MultipartFile file) {
+        try {
+            // 고정된 업로드 디렉토리 설정 (예: C:/uploads/)
+            String uploadDir = "C:/uploads/";
+            String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            Path path = Paths.get(uploadDir + filename);
+
+            // 디렉토리 없으면 생성
+            Files.createDirectories(path.getParent());
+
+            // 파일 저장
+            Files.write(path, file.getBytes());
+
+            // URL 경로 반환
+            return filename;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save image", e);
+        }
     }
 }

@@ -67,11 +67,14 @@ List<Object[]> findPostsWithNickName(
             WHEN AGE(NOW(), a.created_at) < INTERVAL '3 day' THEN '2일 전'
             ELSE TO_CHAR(a.created_at, '오래 전') -- 그 외에는 원본 날짜 출력
         END AS time_ago,
-        c.image
+        c.image,
+        COALESCE(json_agg(d.image_paths) FILTER (WHERE d.image_paths IS NOT NULL), '[]'::json) AS image_main_path
         FROM posts a
         LEFT JOIN users b ON a.user_id = b.id
         LEFT JOIN category c on a.category_id = c.id
+        LEFT JOIN post_images d on a.id = d.post_id
         WHERE (:id IS NULL OR a.id = :id)
+        GROUP BY a.id, b.nick_name, c.name, c.image
         ORDER BY a.id DESC
     """, nativeQuery = true)
     List<Object[]> findPostsWithId(@Param("id") Long id);

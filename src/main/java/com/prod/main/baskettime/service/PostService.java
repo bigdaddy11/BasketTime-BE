@@ -80,6 +80,7 @@ public class PostService {
         post.setCategoryName((String) row[8]); // String
         post.setTimeAgo((String) row[9]); // String
         post.setImage((String) row[10]); // String
+        post.setImageMainPath((String) row[11]); // String
         return post;
     }
 

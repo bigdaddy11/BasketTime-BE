@@ -1,18 +1,22 @@
 package com.prod.main.baskettime.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.TenantId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -29,6 +33,11 @@ public class Post {
     private Long userId;
     private String title;
     private String content;
+
+    @ElementCollection // 이미지 경로 리스트를 DB에 저장
+    @CollectionTable(name = "post_images", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "image_paths") // 저장될 컬럼 이름
+    private List<String> imagePaths; // 다중 이미지 경로
 
     @Transient // DB에 저장되지 않음
     private String nickName;
@@ -53,6 +62,9 @@ public class Post {
 
     @Transient // DB에 저장되지 않음
     private Boolean isLiked;
+
+    @Transient // DB에 저장되지 않음
+    private String imageMainPath;
 
     // 등록일자
     @CreatedDate
@@ -181,5 +193,22 @@ public class Post {
 
     public void setIsLiked(Boolean isLiked) {
         this.isLiked = isLiked;
+    }
+
+    public List<String> getImagePaths() {
+        return imagePaths;
+    }
+
+    public void setImagePaths(List<String> imagePaths) {
+        this.imagePaths = imagePaths;
+    }
+
+    
+    public String getImageMainPath() {
+        return imageMainPath;
+    }
+
+    public void setImageMainPath(String imageMainPath) {
+        this.imageMainPath = imageMainPath;
     }
 }
