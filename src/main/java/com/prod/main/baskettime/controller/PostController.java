@@ -80,30 +80,25 @@ public class PostController {
         @RequestParam("categoryId") Long categoryId,
         @RequestParam("userId") Long userId,
         @RequestParam(value = "images", required = false) List<MultipartFile> images) {
-
-        Post post = new Post();
-        post.setTitle(title);
-        post.setContent(content);
-        post.setCategoryId(categoryId);
-        post.setUserId(userId);
-
-        // 이미지 저장 로직 추가
-        if (images != null && !images.isEmpty()) {
-            List<String> imagePaths = images.stream()
-                                            .map(this::saveImage)
-                                            .collect(Collectors.toList());
-            post.setImagePaths(imagePaths); // Post 객체에 이미지 경로 리스트 저장
-        }
-
-
-        return ResponseEntity.ok(postService.createPost(post));
+            Post post = postService.createPost(title, content, categoryId, userId, images);
+            return ResponseEntity.ok(post);
     }
 
     // 게시글 수정
-    @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable("id") Long id, @RequestBody Post updatedPost) {
-        return ResponseEntity.ok(postService.updatePost(id, updatedPost));
-    }
+    // @PutMapping("/{id}")
+    // public ResponseEntity<Post> updatePost(@PathVariable("id") Long id, @RequestBody Post updatedPost) {
+    //     return ResponseEntity.ok(postService.updatePost(id, updatedPost));
+    // }
+    @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
+        public ResponseEntity<Post> updatePost(
+        @PathVariable("id") Long id,
+        @RequestParam("title") String title,
+        @RequestParam("content") String content,
+        @RequestParam("categoryId") Long categoryId,
+        @RequestParam(value = "images", required = false) List<MultipartFile> images) {
+            Post post = postService.updatePost(id, title, content, categoryId, images);
+            return ResponseEntity.ok(post);
+        }
 
     // 게시글 삭제
     @DeleteMapping("/{id}")
@@ -112,23 +107,4 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    private String saveImage(MultipartFile file) {
-        try {
-            // 고정된 업로드 디렉토리 설정 (예: C:/uploads/)
-            String uploadDir = "C:/uploads/";
-            String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            Path path = Paths.get(uploadDir + filename);
-
-            // 디렉토리 없으면 생성
-            Files.createDirectories(path.getParent());
-
-            // 파일 저장
-            Files.write(path, file.getBytes());
-
-            // URL 경로 반환
-            return filename;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to save image", e);
-        }
-    }
 }

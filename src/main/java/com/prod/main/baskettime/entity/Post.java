@@ -1,6 +1,7 @@
 package com.prod.main.baskettime.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.TenantId;
@@ -8,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -17,6 +19,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -34,10 +37,11 @@ public class Post {
     private String title;
     private String content;
 
-    @ElementCollection // 이미지 경로 리스트를 DB에 저장
-    @CollectionTable(name = "post_images", joinColumns = @JoinColumn(name = "post_id"))
-    @Column(name = "image_paths") // 저장될 컬럼 이름
-    private List<String> imagePaths; // 다중 이미지 경로
+    // @ElementCollection // 이미지 경로 리스트를 DB에 저장
+    // @CollectionTable(name = "post_images", joinColumns = @JoinColumn(name = "post_id"))
+    // @Column(name = "image_paths") // 저장될 컬럼 이름
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostImages> imagePaths = new ArrayList<>(); // 다중 이미지 경로
 
     @Transient // DB에 저장되지 않음
     private String nickName;
@@ -194,15 +198,6 @@ public class Post {
     public void setIsLiked(Boolean isLiked) {
         this.isLiked = isLiked;
     }
-
-    public List<String> getImagePaths() {
-        return imagePaths;
-    }
-
-    public void setImagePaths(List<String> imagePaths) {
-        this.imagePaths = imagePaths;
-    }
-
     
     public String getImageMainPath() {
         return imageMainPath;
@@ -210,5 +205,13 @@ public class Post {
 
     public void setImageMainPath(String imageMainPath) {
         this.imageMainPath = imageMainPath;
+    }
+
+    public List<PostImages> getImagePaths() {
+        return imagePaths;
+    }
+
+    public void setImagePaths(List<PostImages> imagePaths) {
+        this.imagePaths = imagePaths;
     }
 }
