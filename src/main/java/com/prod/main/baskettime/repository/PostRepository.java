@@ -36,7 +36,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             WHERE v.relation_id = a.id AND v.type = 'P') AS view_count, -- 조회수
         (SELECT COUNT(*) > 0
             FROM likes l
-            WHERE l.relation_id = a.id AND l.user_id = :userId AND l.type = 'P') AS is_liked -- 좋아요 여부
+            WHERE l.relation_id = a.id AND l.user_id = :userId AND l.type = 'P') AS is_liked, -- 좋아요 여부
+        (SELECT pi.image_paths 
+            FROM post_images pi 
+            WHERE pi.post_id = a.id 
+            ORDER BY pi.id ASC 
+            LIMIT 1) AS image_main_path
         FROM posts a
         LEFT JOIN users b ON a.user_id = b.id
         LEFT JOIN category c on a.category_id = c.id
@@ -44,11 +49,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         ORDER BY a.id DESC
         OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY
         """, nativeQuery = true)
-List<Object[]> findPostsWithNickName(
-    @Param("categoryId") Long categoryId,
-    @Param("userId") Long userId,
-    @Param("offset") Long offset,
-    @Param("limit") int limit);
+    List<Object[]> findPostsWithNickName(
+        @Param("categoryId") Long categoryId,
+        @Param("userId") Long userId,
+        @Param("offset") Long offset,
+        @Param("limit") int limit);
 
     @Query(value = """
         SELECT COUNT(*)
