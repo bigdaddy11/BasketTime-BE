@@ -41,7 +41,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             FROM post_images pi 
             WHERE pi.post_id = a.id 
             ORDER BY pi.id ASC 
-            LIMIT 1) AS image_main_path
+            LIMIT 1) AS image_main_path,
+        c.image
         FROM posts a
         LEFT JOIN users b ON a.user_id = b.id
         LEFT JOIN category c on a.category_id = c.id

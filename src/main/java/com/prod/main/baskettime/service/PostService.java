@@ -66,6 +66,7 @@ public class PostService {
             post.setViewCount(((Number) row[12]).longValue());
             post.setIsLiked((Boolean) row[13]);
             post.setImageMainPath((String) row[14]);
+            post.setImage((String) row[15]);
             return post;
         }).collect(Collectors.toList());
 
