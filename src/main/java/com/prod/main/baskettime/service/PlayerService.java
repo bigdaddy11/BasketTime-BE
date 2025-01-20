@@ -47,6 +47,7 @@ public class PlayerService {
                 existingPlayer.setJerseyNumber(player.getJerseyNumber());
                 existingPlayer.setWeight(player.getWeight());
                 existingPlayer.setHeight(player.getHeight());
+                existingPlayer.setImagePath(player.getImagePath());
                 playerRepository.save(existingPlayer);
                 System.out.println("업데이트된 선수: " + player.getFirstName() + " ");
             } else {

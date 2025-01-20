@@ -34,6 +34,7 @@ public class Player {
     private String country;
     private String college;
     private String type;
+    private String imagePath;
 
     @Transient // DB에 저장되지 않음
     private String teamName;
@@ -142,5 +143,12 @@ public class Player {
     }
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+    
+    public String getImagePath() {
+        return imagePath;
+    }
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

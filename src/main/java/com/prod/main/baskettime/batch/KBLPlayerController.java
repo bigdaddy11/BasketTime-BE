@@ -59,6 +59,7 @@ public class KBLPlayerController {
 
                     // 선수 정보 추출
                     player.setFirstName(row.findElement(By.cssSelector("div.player-name p")).getText());
+                    player.setImagePath(row.findElement(By.cssSelector("tr td .player-name img")).getAttribute("src"));
                     //player.setT
                     player.setTeamName(row.findElements(By.tagName("td")).get(1).getText());
                     player.setJerseyNumber(row.findElements(By.tagName("td")).get(2).getText());
