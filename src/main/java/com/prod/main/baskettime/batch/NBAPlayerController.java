@@ -60,6 +60,9 @@ public class NBAPlayerController {
                     player.setTeamName(row.findElements(By.tagName("td")).get(1).getText());
                     player.setJerseyNumber(row.findElements(By.tagName("td")).get(2).getText());
                     player.setPosition(row.findElements(By.tagName("td")).get(3).getText());
+
+                    //이미지 가져오기
+                    player.setImagePath(row.findElements(By.tagName("td")).get(0).findElement(By.cssSelector("div.RosterRow_playerHeadshot__tvZOn img")).getAttribute("src"));
                     
                     String height = row.findElements(By.tagName("td")).get(4).getText();
                     String weight = row.findElements(By.tagName("td")).get(5).getText().replaceAll("[^0-9]", "");
