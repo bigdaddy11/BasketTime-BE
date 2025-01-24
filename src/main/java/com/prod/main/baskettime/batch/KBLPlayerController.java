@@ -1,6 +1,7 @@
 package com.prod.main.baskettime.batch;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +43,7 @@ public class KBLPlayerController {
         options.addArguments("--disable-dev-shm-usage"); // 메모리 공유 이슈 해결
 
         WebDriver driver = new ChromeDriver(options);
-
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         List<Player> players = new ArrayList<>();
 
         try {
@@ -86,6 +89,7 @@ public class KBLPlayerController {
                     players.add(player);
                 }
                  // 다음 페이지 버튼 찾기
+                 wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("button[title='다음 페이지']")));
                  WebElement nextButton = driver.findElement(By.cssSelector("button[title='다음 페이지']"));
                  // 버튼이 비활성화되었는지 확인
                 if (nextButton.getAttribute("disabled") != null) { // disabled 속성이 존재하면 마지막 페이지
