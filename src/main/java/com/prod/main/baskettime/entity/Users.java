@@ -20,10 +20,15 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String subId;
+    private String picture;
     private String email;
     private String name;
     private String type;    // G : google, N : Naver, K: Kakao
     private String nickName;
+    
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean editIs = false;
 
     // 등록일자
     @CreatedDate
@@ -81,5 +86,24 @@ public class Users {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+    public String getSubId() {
+        return subId;
+    }
+    public void setSubId(String subId) {
+        this.subId = subId;
+    }
+    public boolean isEditIs() {
+        return editIs;
+    }
+    public void setEditIs(boolean editIs) {
+        this.editIs = editIs;
     }
 }

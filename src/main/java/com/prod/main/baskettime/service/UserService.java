@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.prod.main.baskettime.dto.GoogleLoginRequest;
 import com.prod.main.baskettime.entity.Users;
+import com.prod.main.baskettime.generator.NicknameGenerator;
 import com.prod.main.baskettime.repository.UserRepository;
 
 @Service
@@ -29,5 +31,48 @@ public class UserService {
      */
     public Users findById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    public Users findOrCreateUser(GoogleLoginRequest request) {
+        // 이메일 또는 Google ID로 사용자 찾기
+        Users user = userRepository.findBySubId(request.getSubId())
+                .orElseGet(() -> userRepository.findByEmail(request.getEmail()).orElse(null));
+
+        if (user == null) {
+            String randomNickname = NicknameGenerator.generateRandomNickname();
+            // 사용자 등록
+            user = new Users();
+            user.setSubId(request.getSubId());
+            user.setName(request.getName());
+            user.setEmail(request.getEmail());
+            user.setPicture(request.getPicture());
+            user.setType("G");
+            user.setNickName(randomNickname);
+            user.setEditIs(false); // 닉네임 수정 여부 초기화
+            user = userRepository.save(user);
+        } else {
+            // 기존 사용자 정보와 비교하여 변경사항 확인 및 업데이트
+            boolean isUpdated = false;
+    
+            if (!user.getName().equals(request.getName())) {
+                user.setName(request.getName());
+                isUpdated = true;
+            }
+            if (!user.getEmail().equals(request.getEmail())) {
+                user.setEmail(request.getEmail());
+                isUpdated = true;
+            }
+            if (!user.getPicture().equals(request.getPicture())) {
+                user.setPicture(request.getPicture());
+                isUpdated = true;
+            }
+    
+            // 필요한 경우 다른 필드도 비교 및 업데이트
+            if (isUpdated) {
+                user = userRepository.save(user); // 변경사항 저장
+            }
+        }
+
+        return user;
     }
 }
