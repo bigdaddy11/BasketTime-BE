@@ -31,7 +31,7 @@ public class LoginController {
         this.userService = userService;
     }
 
-    @PostMapping("/google-login")
+    @PostMapping("/login")
     public ResponseEntity<Users> googleLogin(@RequestBody GoogleLoginRequest request) {
         try {
             // 사용자 조회 또는 등록

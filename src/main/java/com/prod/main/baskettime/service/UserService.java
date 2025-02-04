@@ -46,7 +46,7 @@ public class UserService {
             user.setName(request.getName());
             user.setEmail(request.getEmail());
             user.setPicture(request.getPicture());
-            user.setType("G");
+            user.setType(request.getType());
             user.setNickName(randomNickname);
             user.setEditIs(false); // 닉네임 수정 여부 초기화
             user = userRepository.save(user);

@@ -5,7 +5,14 @@ public class GoogleLoginRequest {
     private String name;
     private String email;
     private String picture;
+    private String type;
 
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
     public String getSubId() {
         return subId;
     }
