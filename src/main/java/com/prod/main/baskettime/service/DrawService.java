@@ -38,4 +38,13 @@ public class DrawService {
     public List<Draw> findAllWithProductCode() {
         return drawRepository.findByProductCodeIsNotNull();
     }
+
+    /**
+     * 현재 날짜 기준으로 일주일 간의 드로우 데이터 조회
+     */
+    public List<Draw> getDrawsForWeek() {
+        LocalDate today = LocalDate.now();
+        LocalDate oneWeekLater = today.plusDays(7);
+        return drawRepository.findDrawsForWeek(today, oneWeekLater);
+    }
 }

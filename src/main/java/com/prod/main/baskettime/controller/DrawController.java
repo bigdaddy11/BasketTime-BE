@@ -26,4 +26,10 @@ public class DrawController {
         List<Draw> draws = drawService.getDrawsByDate(date);
         return ResponseEntity.ok(draws);
     }
+
+    @GetMapping("/week")
+    public ResponseEntity<List<Draw>> getDrawsForWeek() {
+        List<Draw> drawList = drawService.getDrawsForWeek();
+        return ResponseEntity.ok(drawList);
+    }
 }
