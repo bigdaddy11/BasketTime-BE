@@ -11,6 +11,10 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     List<Users> findByNickNameContainingIgnoreCase(String nickname);
 
+    boolean existsByNickNameAndIdNot(String nickName, Long userId);
+
     Optional<Users> findBySubId(String googleId);
     Optional<Users> findBySubIdAndType(String subId, String type);
+
+    Optional<Users> findByNickName(String nickname); 
 }

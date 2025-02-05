@@ -5,7 +5,7 @@ import java.util.Random;
 public class NicknameGenerator {
 
     private static final String[] ADJECTIVES = {
-        "행복한", "빠른", "느긋한", "용감한", "똑똑한", "귀여운", "멋진", "재미있는", "강한", "부드러운"
+        "행복한", "빠른", "느긋한", "용감한", "똑똑한", "귀여운", "멋진", "재밌는", "강한", "부드런"
     };
 
     private static final String[] NOUNS = {
@@ -16,12 +16,9 @@ public class NicknameGenerator {
         Random random = new Random();
         String adjective = ADJECTIVES[random.nextInt(ADJECTIVES.length)].replaceAll("\\s+", "").trim(); // 띄어쓰기 제거
         String noun = NOUNS[random.nextInt(NOUNS.length)].replaceAll("\\s+", "").trim(); // 띄어쓰기 제거
-        int number = random.nextInt(100); // 0부터 999까지의 랜덤 숫자
+        int number = random.nextInt(100); // 0부터 99까지의 랜덤 숫자
 
         String nickname = adjective + noun + number;
-
-    // ✅ 로그 출력 (VSCode Debug Console에서 확인)
-
         return nickname;
     }
 }

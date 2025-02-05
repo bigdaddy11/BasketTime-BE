@@ -44,27 +44,45 @@ public class LoginController {
 
     @PutMapping("/{userId}/nickname")
     public ResponseEntity<?> updateNickname(
-        @PathVariable(name = "userId", required = false) Long userId,
-        @RequestParam(name = "nickname", required = false) String nickname) {
+        @PathVariable(name = "userId") Long userId,
+        @RequestParam(name = "nickname") String nickname) {
+        
         Optional<Users> optionalUser = userRepository.findById(userId);
-
-        if (optionalUser.isPresent()) {
-            Users user = optionalUser.get();
-            
-            // 이미 수정된 닉네임인지 확인
-            if (user.isEditIs()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임은 이미 수정되었습니다.");
-            }
-
-            // 닉네임 업데이트
-            user.setNickName(nickname);
-            user.setEditIs(true); // 수정 플래그 true로 변경
-            userRepository.save(user);
-
-            return ResponseEntity.ok("닉네임이 성공적으로 변경되었습니다.");
+        
+        // 닉네임 길이 제한 
+        if (nickname.length() > 8) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임은 최대 8자까지만 가능합니다.");
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        // 닉네임 값이 null이거나 비어있는 경우 예외처리
+        if (nickname == null || nickname.trim().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임을 입력해주세요.");
+        }
+
+        // 사용자가 존재하지 않을 경우 404 반환
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        }
+
+        Users user = optionalUser.get();
+
+        // 이미 닉네임을 변경한 경우 400 반환
+        if (user.isEditIs()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("닉네임은 이미 수정되었습니다.");
+        }
+
+        // 중복 닉네임 검사 (다른 사용자가 동일한 닉네임을 사용하고 있는지 체크)
+        boolean isNicknameTaken = userRepository.existsByNickNameAndIdNot(nickname, userId);
+        if (isNicknameTaken) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 닉네임입니다.");
+        }
+
+        // ✅ 닉네임 업데이트 중
+        user.setNickName(nickname);
+        user.setEditIs(true);
+        userRepository.save(user);
+
+        return ResponseEntity.ok("닉네임이 성공적으로 변경되었습니다.");
     }
 }
 
