@@ -34,9 +34,8 @@ public class UserService {
     }
 
     public Users findOrCreateUser(GoogleLoginRequest request) {
-        // 이메일 또는 Google ID로 사용자 찾기
-        Users user = userRepository.findBySubId(request.getSubId())
-                .orElseGet(() -> userRepository.findByEmail(request.getEmail()).orElse(null));
+        // ✅ subId + type을 기반으로 유저 조회
+        Users user = userRepository.findBySubIdAndType(request.getSubId(), request.getType()).orElse(null);
 
         if (user == null) {
             String randomNickname = NicknameGenerator.generateRandomNickname();

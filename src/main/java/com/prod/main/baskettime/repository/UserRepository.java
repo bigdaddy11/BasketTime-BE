@@ -12,4 +12,5 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     List<Users> findByNickNameContainingIgnoreCase(String nickname);
 
     Optional<Users> findBySubId(String googleId);
+    Optional<Users> findBySubIdAndType(String subId, String type);
 }

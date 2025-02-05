@@ -14,11 +14,15 @@ public class NicknameGenerator {
 
     public static String generateRandomNickname() {
         Random random = new Random();
-        String adjective = ADJECTIVES[random.nextInt(ADJECTIVES.length)];
-        String noun = NOUNS[random.nextInt(NOUNS.length)];
-        int number = random.nextInt(1000); // 0부터 999까지의 랜덤 숫자
+        String adjective = ADJECTIVES[random.nextInt(ADJECTIVES.length)].replaceAll("\\s+", "").trim(); // 띄어쓰기 제거
+        String noun = NOUNS[random.nextInt(NOUNS.length)].replaceAll("\\s+", "").trim(); // 띄어쓰기 제거
+        int number = random.nextInt(100); // 0부터 999까지의 랜덤 숫자
 
-        return adjective + " " + noun + number;
+        String nickname = adjective + noun + number;
+
+    // ✅ 로그 출력 (VSCode Debug Console에서 확인)
+
+        return nickname;
     }
 }
 
