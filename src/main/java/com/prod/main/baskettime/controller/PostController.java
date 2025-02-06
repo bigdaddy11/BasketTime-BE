@@ -41,8 +41,9 @@ public class PostController {
     public ResponseEntity<Page<Post>> getPostsByCategory(
         @RequestParam(name = "categoryId", required = false) Long categoryId,
         @RequestParam(name = "userId", required = false) Long userId,
+        @RequestParam(name = "sort", required = false) String sort,
         Pageable pageable) {
-        Page<Post> posts = postService.getPostsByCategoryId(categoryId, userId, pageable);
+        Page<Post> posts = postService.getPostsByCategoryId(categoryId, userId, sort, pageable);
         return ResponseEntity.ok(posts);
     }
 

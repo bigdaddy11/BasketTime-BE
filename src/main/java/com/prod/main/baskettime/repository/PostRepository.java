@@ -28,9 +28,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         (SELECT COUNT(*) 
             FROM post_comment pc 
             WHERE pc.relation_id = a.id AND pc.type = 'P') AS comment_count, -- 댓글 수
-        (SELECT COUNT(DISTINCT l.id) 
-            FROM likes l 
-            WHERE l.relation_id = a.id AND l.type = 'P') AS like_count, -- 좋아요 수
+        COALESCE(like_count, 0) AS like_count, -- 좋아요 수
         (SELECT COUNT(DISTINCT v.id) 
             FROM views v 
             WHERE v.relation_id = a.id AND v.type = 'P') AS view_count, -- 조회수
@@ -46,15 +44,25 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         FROM posts a
         LEFT JOIN users b ON a.user_id = b.id
         LEFT JOIN category c on a.category_id = c.id
+        LEFT JOIN (
+            SELECT l.relation_id, COUNT(DISTINCT l.id) AS like_count
+            FROM likes l 
+            WHERE l.type = 'P' 
+            GROUP BY l.relation_id
+        ) likes_count ON a.id = likes_count.relation_id
         WHERE (:categoryId IS NULL OR a.category_id = :categoryId)
-        ORDER BY a.id DESC
+        ORDER BY 
+            CASE WHEN :sortOrder = 'popular' THEN COALESCE(likes_count.like_count, 0) END DESC,
+            CASE WHEN :sortOrder = 'popular' THEN a.id END DESC,
+            CASE WHEN :sortOrder = 'latest' THEN a.id END DESC
         OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY
         """, nativeQuery = true)
     List<Object[]> findPostsWithNickName(
         @Param("categoryId") Long categoryId,
         @Param("userId") Long userId,
         @Param("offset") Long offset,
-        @Param("limit") int limit);
+        @Param("limit") int limit,
+        @Param("sortOrder") String sortOrder);
 
     @Query(value = """
         SELECT COUNT(*)

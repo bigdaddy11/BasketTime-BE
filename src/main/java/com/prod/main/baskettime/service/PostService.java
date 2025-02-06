@@ -44,9 +44,9 @@ public class PostService {
         return postRepository.findById(id); // ID로 게시글 조회
     }
 
-    public Page<Post> getPostsByCategoryId(Long categoryId, Long userId, Pageable pageable) {
+    public Page<Post> getPostsByCategoryId(Long categoryId, Long userId, String sort, Pageable pageable) {
         // Raw data 가져오기
-        List<Object[]> rawPosts = postRepository.findPostsWithNickName(categoryId, userId, pageable.getOffset(), pageable.getPageSize());
+        List<Object[]> rawPosts = postRepository.findPostsWithNickName(categoryId, userId, pageable.getOffset(), pageable.getPageSize(), sort);
 
         // Object[] 데이터를 Post 엔티티로 변환
         List<Post> posts = rawPosts.stream().map(row -> {
