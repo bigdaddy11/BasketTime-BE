@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class SecurityConfig {
@@ -20,15 +21,9 @@ public class SecurityConfig {
 
         return http.build();
     }
-    // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    //     http
-    //         .csrf().disable()   // CSRF가 필요 없을 경우 비활성화
-    //         .authorizeHttpRequests(authorize -> authorize
-    //             .requestMatchers("/api/**","/oauth2/**").permitAll()  // Replace .antMatchers with .requestMatchers
-    //             .anyRequest().authenticated()
-    //         )
-    //         .oauth2Login()
-    //             .defaultSuccessUrl("/api/auth/google/callback", true);  
-    //     return http.build();
-    // }
+    
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 }
