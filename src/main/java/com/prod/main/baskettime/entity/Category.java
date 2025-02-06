@@ -27,6 +27,8 @@ public class Category {
 
     private String image; // 이미지 URL
 
+    private Long align;
+
     // 등록일자
     @CreatedDate
     @Column(updatable = false)
@@ -74,5 +76,14 @@ public class Category {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    
+    public Long getAlign() {
+        return align;
+    }
+
+    public void setAlign(Long align) {
+        this.align = align;
     }
 }

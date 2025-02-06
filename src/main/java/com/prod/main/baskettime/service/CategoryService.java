@@ -16,6 +16,6 @@ public class CategoryService {
     }
 
     public List<Category> getAllCategories() {
-        return categoryRepository.findAllByOrderByIdAsc();
+        return categoryRepository.findAllByOrderByAlignAsc();
     }
 }
