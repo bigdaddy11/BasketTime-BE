@@ -34,9 +34,6 @@ spring:
         multipart:
             max-file-size: 10MB
             max-request-size: 50MB
-kakao:
-    api:
-        key: 07458ddb83a33fe105ca0b09b037e482
         
 logging: 
     level: 
@@ -48,3 +45,7 @@ logging:
                     descriptor:
                         sql:
                             BasicBinder: TRACE
+            springframework:
+                web:
+                    client:
+                        RestTemplate: INFO
