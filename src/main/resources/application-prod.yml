@@ -1,0 +1,18 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://43.200.52.223:5432/postgres
+        username: postgres
+        password: h98016995!
+        driver-class-name: org.postgresql.Driver
+    server:
+        port: 8080
+        
+    web:
+        resources:
+            static-locations: file:/uploads/
+
+file:
+    upload-dir: /uploads/  
+
+cors:
+    allowed-origins: "https://baskettime.co.kr,http://baskettime.co.kr,http://localhost,https://localhost"

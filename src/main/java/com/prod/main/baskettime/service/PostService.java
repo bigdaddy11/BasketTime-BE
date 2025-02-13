@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,6 +29,8 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class PostService {
+    @Value("${file.upload-dir}")
+    private String uploadImageDir;
 
     private final PostRepository postRepository;
 
@@ -193,8 +196,9 @@ public class PostService {
 
     private String saveImage(MultipartFile file) {
         try {
+            System.out.println("uploadImageDir : " + uploadImageDir);
             // 고정된 업로드 디렉토리 설정 (예: C:/uploads/)
-            String uploadDir = "C:/uploads/";
+            String uploadDir = uploadImageDir;
             String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
             Path path = Paths.get(uploadDir + filename);
 
@@ -214,7 +218,7 @@ public class PostService {
     // 이미지 삭제 메서드
     private void deleteImage(String filename) {
         try {
-            String uploadDir = "C:/uploads/";
+            String uploadDir = uploadImageDir;
             Path path = Paths.get(uploadDir + filename);
             Files.deleteIfExists(path);
         } catch (IOException e) {

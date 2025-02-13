@@ -1,15 +1,9 @@
 spring:
+    profiles:
+        active: dev
+        
     application:
         name: baskettime
-    web:
-        resources:
-            static-locations: file:///C:/uploads/
-
-    datasource:
-        url: jdbc:postgresql://43.200.52.223:5432/postgres
-        username: postgres
-        password: h98016995!
-        driver-class-name: org.postgresql.Driver
 
     jpa:
         hibernate:
