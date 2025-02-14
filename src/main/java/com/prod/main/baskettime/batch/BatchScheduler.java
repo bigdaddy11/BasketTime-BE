@@ -1,15 +1,11 @@
 package com.prod.main.baskettime.batch;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
 public class BatchScheduler {
-    @Value("${server.name:primary}") // 서버 이름을 시스템 프로퍼티에서 가져옴
-    private String serverName;
-
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Scheduled(cron = "0 0 1 * * ?") // 매일 새벽 1시에 실행
@@ -37,16 +33,12 @@ public class BatchScheduler {
     }
 
     private void executeBatch(String url, String batchName) {
-        if ("primary".equals(serverName)) {
-            try {
-                System.out.println(batchName + " 시작");
-                String response = restTemplate.getForObject(url, String.class);
-                System.out.println(batchName + " 완료: " + response);
-            } catch (Exception e) {
-                System.err.println(batchName + " 실패: " + e.getMessage());
-            }
-        } else {
-            System.out.println(batchName + " 스킵: 현재 서버는 primary가 아님");
+        try {
+            System.out.println(batchName + " 시작");
+            String response = restTemplate.getForObject(url, String.class);
+            System.out.println(batchName + " 완료: " + response);
+        } catch (Exception e) {
+            System.err.println(batchName + " 실패: " + e.getMessage());
         }
     }
 }

@@ -196,7 +196,6 @@ public class PostService {
 
     private String saveImage(MultipartFile file) {
         try {
-            System.out.println("uploadImageDir : " + uploadImageDir);
             // 고정된 업로드 디렉토리 설정 (예: C:/uploads/)
             String uploadDir = uploadImageDir;
             String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
