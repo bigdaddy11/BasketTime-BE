@@ -7,13 +7,18 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)  // 엔티티 리스너 추가
@@ -26,6 +31,8 @@ public class PostComment {
     private Long relationId;  // 댓글이 달릴 게시글 ID
     private Long userId;    // 댓글 달은 유저
 
+    private Long parentId;    // 부모 댓글 ID (대댓글 구분)
+
     @Transient // DB에 저장되지 않음
     private String nickName;    // 댓글 달은 유저
     
@@ -35,6 +42,18 @@ public class PostComment {
 
     @Transient // DB에 저장되지 않음
     private String timeAgo;
+
+    @OneToMany(mappedBy = "parentId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PostComment> replies = new ArrayList<>();
+
+    // Getter, Setter 추가
+    public List<PostComment> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<PostComment> replies) {
+        this.replies = replies;
+    }
 
     // 등록일자
     @CreatedDate
@@ -117,4 +136,12 @@ public class PostComment {
         this.type = type;
     }
 
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+    
 }

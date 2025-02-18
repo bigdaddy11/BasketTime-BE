@@ -1,6 +1,8 @@
 package com.prod.main.baskettime.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +45,26 @@ public class PostCommentController {
         commentText.setRelationId(relationId); // URL의 postId 설정
         PostComment savedComment = postCommentService.addComment(commentText);
         return ResponseEntity.status(201).body(savedComment);
+    }
+
+    // 대댓글 작성
+    @PostMapping
+    public ResponseEntity<PostComment> createComment(@RequestBody PostComment comment) {
+        PostComment savedComment = postCommentService.saveComment(comment);
+        return ResponseEntity.ok(savedComment);
+    }
+
+    // 특정 댓글의 대댓글만 가져오기
+    @GetMapping("/{commentId}/replies")
+    public ResponseEntity<Map<String, Object>> getReplies(@PathVariable Long commentId) {
+        PostComment parentComment = postCommentService.getCommentById(commentId);
+        List<PostComment> replies = postCommentService.getRepliesByCommentId(commentId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("parentComment", parentComment);
+        response.put("replies", replies);
+
+        return ResponseEntity.ok(response);
     }
 
     // 댓글 수정
