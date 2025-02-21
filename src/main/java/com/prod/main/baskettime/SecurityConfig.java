@@ -12,8 +12,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .cors().and()
             .csrf().disable() // CSRF 보호 비활성화 (테스트용)
-            .authorizeRequests(auth -> auth
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/ws/**").permitAll()
+                .requestMatchers("/topic/**").permitAll()
+                .requestMatchers("/app/**").permitAll()
                 .anyRequest().permitAll() // 모든 요청 허용
             )
             .formLogin().disable() // 폼 로그인 비활성화
