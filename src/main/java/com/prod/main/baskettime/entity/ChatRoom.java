@@ -1,17 +1,22 @@
 package com.prod.main.baskettime.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)  // 엔티티 리스너 추가
@@ -37,6 +42,26 @@ public class ChatRoom {
     // 수정일자
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @Formula("(SELECT COUNT(u.id) FROM chat_room_user u WHERE u.chat_room_id = id)")
+    private int userCount;
+
+    // 참여 중인 사용자 리스트
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatRoomUser> participants = new ArrayList<>();
+
+    public List<ChatRoomUser> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<ChatRoomUser> participants) {
+        this.participants = participants;
+    }
+
+    // ✅ 추가: 참여한 유저 수 반환
+    public int getUserCount() {
+        return participants != null ? participants.size() : 0;
+    }
 
     public ChatRoom() {}
 

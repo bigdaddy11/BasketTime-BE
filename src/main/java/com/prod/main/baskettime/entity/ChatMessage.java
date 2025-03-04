@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -19,9 +20,20 @@ public class ChatMessage {
     private Long id;
 
     private Long roomId;         // 채팅방 ID
-    private String sender;       // 보낸 사람
+    private Long sender;       // 보낸 사람
     private String message;      // 메시지 내용
     private LocalDateTime timestamp; // 보낸 시간
+
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean isSystemMessage; // 시스템 메시지 여부 추가
+
+    public boolean isSystemMessage() {
+        return isSystemMessage;
+    }
+
+    public void setSystemMessage(boolean isSystemMessage) {
+        this.isSystemMessage = isSystemMessage;
+    }
 
     @PrePersist
     public void prePersist() {
@@ -44,11 +56,11 @@ public class ChatMessage {
         this.roomId = roomId;
     }
 
-    public String getSender() {
+    public Long getSender() {
         return sender;
     }
 
-    public void setSender(String sender) {
+    public void setSender(Long sender) {
         this.sender = sender;
     }
 
@@ -67,4 +79,14 @@ public class ChatMessage {
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
+
+    public ChatMessage(Long roomId, Long sender, String message, boolean isSystemMessage) {
+        this.roomId = roomId;
+        this.sender = sender;
+        this.message = message;
+        this.isSystemMessage = isSystemMessage;
+        this.timestamp = LocalDateTime.now();
+    }
+
+    public ChatMessage() {}
 }

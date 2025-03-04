@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.prod.main.baskettime.dto.ChatMessageDTO;
 import com.prod.main.baskettime.entity.ChatMessage;
 import com.prod.main.baskettime.repository.ChatMessageRepository;
 
@@ -46,8 +47,8 @@ public class ChatMessageController {
 
     // ✅ 특정 채팅방의 메시지 가져오기
     @GetMapping("/api/chatrooms/{roomId}/messages")
-    public List<ChatMessage> getChatMessages(@PathVariable Long roomId) {
-        return chatMessageRepository.findByRoomIdOrderByTimestampAsc(roomId);
+    public List<ChatMessageDTO> getChatMessages(@PathVariable Long roomId) {
+        return chatMessageRepository.findChatMessagesWithSenderNickname(roomId);
     }
 
     // ✅ 사용자 입장 메시지 처리
