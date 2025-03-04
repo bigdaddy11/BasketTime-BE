@@ -10,5 +10,6 @@ import com.prod.main.baskettime.entity.ChatRoom;
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     // 페이징 처리
-    Page<ChatRoom> findAll(Pageable pageable);
+    Page<ChatRoom> findAllByOrderByIdDesc(Pageable pageable);
+
 }
