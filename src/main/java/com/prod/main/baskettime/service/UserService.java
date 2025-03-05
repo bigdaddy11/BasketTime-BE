@@ -1,9 +1,16 @@
 package com.prod.main.baskettime.service;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.prod.main.baskettime.dto.GoogleLoginRequest;
 import com.prod.main.baskettime.entity.Users;
@@ -14,6 +21,12 @@ import com.prod.main.baskettime.repository.UserRepository;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Value("${file.upload-dir}")
+    private String uploadImageDir;
+
+    @Value("${base.url}")
+    private String baseUrl;
 
     /**
      * 닉네임으로 유저 검색
@@ -73,5 +86,50 @@ public class UserService {
         }
 
         return user;
+    }
+
+    // ✅ 30일 체크 로직
+    public boolean canUpdateProfilePicture(Long userId) {
+        Users user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        LocalDateTime now = LocalDateTime.now();
+        return user.getUpdatedAt() == null || user.getUpdatedAt().isBefore(now.minusDays(30));
+    }
+
+    // ✅ 프로필 이미지 변경 서비스
+    public String updateProfilePicture(Long userId, MultipartFile file) {
+        Users user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        // 30일 제한 체크
+        if (!canUpdateProfilePicture(userId)) {
+            throw new RuntimeException("프로필 이미지는 30일에 한 번만 변경할 수 있습니다.");
+        }
+
+        String imageUrl = saveImage(file); // 이미지 저장
+        user.setPicture(imageUrl);
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+
+        return imageUrl;
+    }
+
+    // ✅ 이미지 저장 로직
+    private String saveImage(MultipartFile file) {
+        try {
+            // 저장 경로 지정
+            String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            Path path = Paths.get(uploadImageDir + filename);
+
+            // 디렉토리 없으면 생성
+            Files.createDirectories(path.getParent());
+
+            // 파일 저장
+            Files.write(path, file.getBytes());
+
+            return baseUrl + "/" +filename; // 저장된 파일명 반환
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save image", e);
+        }
     }
 }
