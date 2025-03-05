@@ -1,5 +1,6 @@
 package com.prod.main.baskettime.batch;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -8,28 +9,31 @@ import org.springframework.web.client.RestTemplate;
 public class BatchScheduler {
     private final RestTemplate restTemplate = new RestTemplate();
 
+    @Value("${base.url}")
+    private String baseUrl;
+
     @Scheduled(cron = "0 0 1 * * ?") // 매일 새벽 1시에 실행
-    //@Scheduled(cron = "0 40 11 * * ?") // 매일 새벽 1시에 실행
+    //@Scheduled(cron = "0 12 13 * * ?") // 매일 새벽 1시에 실행
     public void runNikeBatch() {
-        executeBatch("http://localhost:8080/api/draw/nike", "Nike Batch");
+        executeBatch(baseUrl + "/api/draw/nike", "Nike Batch");
     }
 
     @Scheduled(cron = "0 5 1 * * ?") // 매일 새벽 1시 5분에 실행
     //@Scheduled(cron = "0 41 11 * * ?") // 매일 새벽 1시에 실행
     public void runNewBalanceBatch() {
-        executeBatch("http://localhost:8080/api/draw/newbalance", "New Balance Batch");
+        executeBatch(baseUrl + "/api/draw/newbalance", "New Balance Batch");
     }
 
     @Scheduled(cron = "0 10 1 * * ?") // 매일 새벽 1시 10분에 실행
     //@Scheduled(cron = "0 42 11 * * ?") // 매일 새벽 1시에 실행
     public void runNewBalanceKidsBatch() {
-        executeBatch("http://localhost:8080/api/draw/newbalance/kids", "New Balance Kids Batch");
+        executeBatch(baseUrl + "/api/draw/newbalance/kids", "New Balance Kids Batch");
     }
 
     @Scheduled(cron = "0 15 1 * * ?") // 매일 새벽 1시 15분에 실행
     //@Scheduled(cron = "0 43 11 * * ?") // 매일 새벽 1시에 실행
     public void runAsicsBatch() {
-        executeBatch("http://localhost:8080/api/draw/asics", "Asics Batch");
+        executeBatch(baseUrl + "/api/draw/asics", "Asics Batch");
     }
 
     private void executeBatch(String url, String batchName) {
