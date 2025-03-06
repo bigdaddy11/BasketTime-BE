@@ -1,5 +1,6 @@
 package com.prod.main.baskettime.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.prod.main.baskettime.dto.ChatMessageDTO;
 import com.prod.main.baskettime.entity.ChatMessage;
+import com.prod.main.baskettime.entity.Users;
 import com.prod.main.baskettime.repository.ChatMessageRepository;
+import com.prod.main.baskettime.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatMessageController {
     private final ChatMessageRepository chatMessageRepository;
+    private final UserRepository userRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
     // // 채팅 메시지 전송 및 브로드캐스트
@@ -41,8 +45,25 @@ public class ChatMessageController {
     @MessageMapping("/chat/{roomId}")
     public void sendMessage(@DestinationVariable Long roomId, ChatMessage message) {
         message.setRoomId(roomId);  // 메시지에 roomId 설정
+
+        Users senderUser = userRepository.findById(message.getSender())
+        .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없음"));
+
+        String NickName = senderUser.getNickName(); // 닉네임 설정
+
+        // 🔹 DTO 변환 후 WebSocket으로 전송
+        ChatMessageDTO messageDTO = new ChatMessageDTO(
+            message.getId(),
+            message.getRoomId(),
+            message.getSender(),
+            NickName,
+            message.getMessage(),
+            LocalDateTime.now(),
+            false
+        );
+
         chatMessageRepository.save(message);  // 메시지 저장
-        messagingTemplate.convertAndSend("/topic/chat/" + roomId, message); // 해당 채팅방으로 전송
+        messagingTemplate.convertAndSend("/topic/chat/" + roomId, messageDTO); // 해당 채팅방으로 전송
     }
 
     // ✅ 특정 채팅방의 메시지 가져오기

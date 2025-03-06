@@ -26,8 +26,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         logger.info("✅ WebSocket Endpoint 등록됨: /ws");
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("*")
-                .setAllowedOrigins("https://baskettime.co.kr")  // 🚀 특정 도메인 추가 허용
-                .withSockJS(); 
+                .setAllowedOrigins("https://baskettime.co.kr");  // 🚀 특정 도메인 추가 허용
                 //.withSockJS();  // Spring Boot 3.x 이상에서는 setAllowedOrigins("*") 대신 사용
     }
 }
