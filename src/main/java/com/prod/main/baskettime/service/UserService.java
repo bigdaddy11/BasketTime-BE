@@ -3,6 +3,7 @@ package com.prod.main.baskettime.service;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,6 +62,10 @@ public class UserService {
             user.setType(request.getType());
             user.setNickName(randomNickname);
             user.setEditIs(false); // 닉네임 수정 여부 초기화
+
+            // ✅ 최초 가입 시 updated_at을 30일 전으로 설정
+            user.setUpdatedAt(LocalDateTime.now().minus(30, ChronoUnit.DAYS));
+
             user = userRepository.save(user);
         } else {
             // 기존 사용자 정보와 비교하여 변경사항 확인 및 업데이트
