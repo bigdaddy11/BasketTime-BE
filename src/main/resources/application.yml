@@ -1,6 +1,6 @@
 spring:
     profiles:
-        active: dev
+        active: prod
         
     application:
         name: baskettime
@@ -65,3 +65,8 @@ server:
             charset: UTF-8
             enabled: true
             force: true
+push:
+    expo:
+        url: "https://exp.host/--/api/v2/push/send"
+    fcm:
+        url: "https://fcm.googleapis.com/fcm/send"

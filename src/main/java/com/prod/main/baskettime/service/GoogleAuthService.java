@@ -4,11 +4,14 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,13 +19,23 @@ import java.util.Map;
 @Service
 public class GoogleAuthService {
 
+    @Value("${push.mode}")
+    private String pushMode;  // 현재 환경 (expo or fcm)
+
+    @Value("${push.expo.url}")
+    private String expoUrl;
+
+    @Value("${push.fcm.url}")
+    private String fcmUrl;
+
     private static final String SERVICE_ACCOUNT_FILE = "src/main/resources/service-account.json"; // 서비스 계정 JSON 경로
     private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
     private static final String FCM_URL = "https://fcm.googleapis.com/v1/projects/dependable-glow-439512-m5/messages:send";
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
-     * Google OAuth2 JWT를 생성하고 액세스 토큰 요청
+     * ✅ Google OAuth2 JWT를 생성하고 액세스 토큰 요청
      */
     public String getAccessToken() {
         try {
@@ -41,9 +54,37 @@ public class GoogleAuthService {
     }
 
     /**
-     * ✅ FCM 푸시 메시지 전송
+     * ✅ 환경에 따라 Expo 또는 FCM으로 푸시 전송
      */
     public String sendPushNotification(String targetToken, String title, String body) {
+        return pushMode.equalsIgnoreCase("expo") 
+            ? sendExpoNotification(targetToken, title, body) 
+            : sendFCMNotification(targetToken, title, body);
+    }
+
+    /**
+     * ✅ Expo Push Notification 전송 (개발 환경)
+     */
+    private String sendExpoNotification(String targetToken, String title, String body) {
+        if (!targetToken.startsWith("ExponentPushToken")) {
+            return "❌ Invalid Expo Push Token";
+        }
+
+        Map<String, Object> payload = new HashMap<>();
+        String decodedPushToken = URLDecoder.decode(targetToken, StandardCharsets.UTF_8);
+        payload.put("to", decodedPushToken);
+        payload.put("title", title);
+        payload.put("body", body);
+        payload.put("sound", "default");
+        payload.put("data", Map.of("extraData", "테스트 데이터"));
+
+        return sendHttpRequest(expoUrl, payload, null);
+    }
+
+    /**
+     * ✅ Firebase Cloud Messaging (FCM) 전송 (운영 환경)
+     */
+    private String sendFCMNotification(String targetToken, String title, String body) {
         try {
             String accessToken = getAccessToken(); // 🔹 OAuth2 액세스 토큰 가져오기
 
@@ -68,14 +109,26 @@ public class GoogleAuthService {
             String requestJson = objectMapper.writeValueAsString(requestBody);
 
             // 🔹 4. HTTP 요청 보내기
-            RestTemplate restTemplate = new RestTemplate();
-            HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
-            ResponseEntity<String> response = restTemplate.exchange(FCM_URL, HttpMethod.POST, entity, String.class);
-
-            return response.getBody();
+            return sendHttpRequest(FCM_URL, requestJson, accessToken);
         } catch (Exception e) {
             throw new RuntimeException("❌ FCM 푸시 알림 전송 실패", e);
         }
     }
-}
 
+    /**
+     * ✅ HTTP 요청 처리 (FCM & Expo 공통)
+     */
+    private String sendHttpRequest(String url, Object payload, String serverKey) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        if (serverKey != null) {
+            headers.setBearerAuth(serverKey);
+        }
+
+        HttpEntity<Object> entity = new HttpEntity<>(payload, headers);
+        ResponseEntity<String> response = new RestTemplate().exchange(url, HttpMethod.POST, entity, String.class);
+
+        return response.getBody();
+    }
+}

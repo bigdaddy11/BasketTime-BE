@@ -17,29 +17,45 @@ import org.springframework.web.bind.annotation.RestController;
 import com.prod.main.baskettime.dto.GoogleLoginRequest;
 import com.prod.main.baskettime.entity.Users;
 import com.prod.main.baskettime.repository.UserRepository;
+import com.prod.main.baskettime.service.PushTokenService;
 import com.prod.main.baskettime.service.UserService;
 
 @RestController
 @RequestMapping("/api/auth")
 public class LoginController {
     @Autowired
-    private UserRepository userRepository
-    ;
-    private final UserService userService;
+    private UserRepository userRepository;
 
-    public LoginController(UserService userService) {
+    private final UserService userService;
+    private final PushTokenService pushTokenService;
+
+    public LoginController(UserService userService, PushTokenService pushTokenService) {
         this.userService = userService;
+        this.pushTokenService = pushTokenService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Users> googleLogin(@RequestBody GoogleLoginRequest request) {
+    public ResponseEntity<Users> googleLogin(
+        @RequestBody GoogleLoginRequest request,
+        @RequestParam(required = false) String pushToken,
+        @RequestParam(required = false) String deviceType) {
         try {
             // 사용자 조회 또는 등록
-            Users user = userService.findOrCreateUser(request);
+            Users user = userService.findOrCreateUser(request, pushToken, deviceType);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    /**
+     * ✅ 앱 실행 시 푸시 토큰 업데이트 (재설치 대비)
+     */
+    @PostMapping("/update-push-token")
+    public void updatePushToken(@RequestParam Long userId,
+                                @RequestParam String pushToken,
+                                @RequestParam String deviceType) {
+        pushTokenService.saveOrUpdatePushToken(userId, pushToken, deviceType);
     }
 
     @PutMapping("/{userId}/nickname")

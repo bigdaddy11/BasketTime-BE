@@ -18,10 +18,15 @@ import com.prod.main.baskettime.entity.Users;
 import com.prod.main.baskettime.generator.NicknameGenerator;
 import com.prod.main.baskettime.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PushTokenService pushTokenService;
 
     @Value("${file.upload-dir}")
     private String uploadImageDir;
@@ -47,7 +52,8 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public Users findOrCreateUser(GoogleLoginRequest request) {
+    @Transactional
+    public Users findOrCreateUser(GoogleLoginRequest request, String pushToken, String deviceType) {
         // ✅ subId + type을 기반으로 유저 조회
         Users user = userRepository.findBySubIdAndType(request.getSubId(), request.getType()).orElse(null);
 
@@ -62,9 +68,15 @@ public class UserService {
             user.setType(request.getType());
             user.setNickName(randomNickname);
             user.setEditIs(false); // 닉네임 수정 여부 초기화
+            user = userRepository.save(user);
 
             // ✅ 최초 가입 시 updated_at을 30일 전으로 설정
             user.setUpdatedAt(LocalDateTime.now().minus(30, ChronoUnit.DAYS));
+
+            // ✅ 푸시 토큰 저장 또는 업데이트 (앱 재설치 대비)
+            if (pushToken != null && deviceType != null) {
+                pushTokenService.saveOrUpdatePushToken(user.getId(), pushToken, deviceType);
+            }
 
             user = userRepository.save(user);
         } else {

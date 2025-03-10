@@ -1,5 +1,6 @@
 package com.prod.main.baskettime.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -80,4 +81,12 @@ public interface PostCommentRepository extends JpaRepository<PostComment, Long> 
 
     List<PostComment> findByParentId(Long parentId);
     List<PostComment> findByRelationIdAndParentIdIsNull(Long postId);
+
+    @Query(value = """
+        SELECT a.id, a.comment_text, a.created_at, a.relation_id, b.user_id 
+        FROM post_comment a
+        LEFT JOIN posts b ON a.relation_id = b.id
+        WHERE a.created_at > :timestamp
+        """, nativeQuery = true)
+    List<Object[]> findRecentCommentsWithAuthor(@Param("timestamp") LocalDateTime timestamp);
 }
