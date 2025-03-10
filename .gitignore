@@ -36,10 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-<<<<<<< HEAD
 src/main/resources/application-*.yml
 src/main/resources/application.yml
 src/main/resources/service-account.json
-=======
-src/main/resources/application-*.yml
->>>>>>> 1297a47e25cf81eb5e018c25f2bf776fe284372e
