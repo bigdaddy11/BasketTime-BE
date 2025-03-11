@@ -22,14 +22,16 @@ public class GoogleAuthService {
     @Value("${push.mode}")
     private String pushMode;  // 현재 환경 (expo or fcm)
 
+    @Value("${push.path}")
+    private static String pushPath;
+
     @Value("${push.expo.url}")
     private String expoUrl;
 
     @Value("${push.fcm.url}")
     private String fcmUrl;
 
-    private static final String SERVICE_ACCOUNT_FILE = "src/main/resources/service-account.json"; // 서비스 계정 JSON 경로
-    private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
+    private static final String SERVICE_ACCOUNT_FILE = pushPath; // 서비스 계정 JSON 경로
     private static final String FCM_URL = "https://fcm.googleapis.com/v1/projects/dependable-glow-439512-m5/messages:send";
 
     private final ObjectMapper objectMapper = new ObjectMapper();

@@ -39,3 +39,4 @@ out/
 src/main/resources/application-*.yml
 src/main/resources/application.yml
 src/main/resources/service-account.json
+gradle.properties
