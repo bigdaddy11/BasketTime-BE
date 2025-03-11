@@ -87,7 +87,7 @@ public class GoogleAuthService {
     private String sendFCMNotification(String targetToken, String title, String body) {
         try {
             String accessToken = getAccessToken(); // 🔹 OAuth2 액세스 토큰 가져오기
-
+            String decodedPushToken = URLDecoder.decode(targetToken, StandardCharsets.UTF_8);
             // 🔹 1. 요청 헤더 설정
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(accessToken);
@@ -97,9 +97,9 @@ public class GoogleAuthService {
             Map<String, Object> notification = new HashMap<>();
             notification.put("title", title);
             notification.put("body", body);
-
+           
             Map<String, Object> message = new HashMap<>();
-            message.put("token", targetToken);
+            message.put("token", decodedPushToken);
             message.put("notification", notification);
 
             Map<String, Object> requestBody = new HashMap<>();
