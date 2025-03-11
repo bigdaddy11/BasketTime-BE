@@ -1,5 +1,6 @@
 package com.prod.main.baskettime.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -54,4 +55,7 @@ public interface PaperPlanRepository extends JpaRepository<PaperPlan, Long> {
         ORDER BY p.id DESC
         """, nativeQuery = true)
     List<Object[]> findSentMessagesWithNickName(@Param("senderId") Long senderId);
+
+    @Query("SELECT p.id, p.rUserId FROM PaperPlan p WHERE p.createdAt >= :sinceTime")
+    List<Object[]> findRecentMessages(@Param("sinceTime") LocalDateTime sinceTime);
 }
