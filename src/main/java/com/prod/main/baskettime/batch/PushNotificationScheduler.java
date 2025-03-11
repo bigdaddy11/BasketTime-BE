@@ -56,8 +56,8 @@ public class PushNotificationScheduler {
 
             List<PushToken> pushTokens = pushTokenRepository.findByUserId(userId);
             if (!pushTokens.isEmpty()) {
-                String title = "📩 새로운 댓글 알림";
-                String body = "📢 " + commentCount + "개의 새로운 댓글이 달렸습니다!";
+                String title = "새로운 댓글 알림";
+                String body = commentCount + "개의 새로운 댓글이 달렸습니다.";
 
                 for (PushToken token : pushTokens) {
                     googleAuthService.sendPushNotification(token.getToken(), title, body);

@@ -5,11 +5,13 @@ import com.google.auth.oauth2.ServiceAccountCredentials;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -22,16 +24,12 @@ public class GoogleAuthService {
     @Value("${push.mode}")
     private String pushMode;  // 현재 환경 (expo or fcm)
 
-    @Value("${push.path}")
-    private static String pushPath;
-
     @Value("${push.expo.url}")
     private String expoUrl;
 
     @Value("${push.fcm.url}")
     private String fcmUrl;
 
-    private static final String SERVICE_ACCOUNT_FILE = pushPath; // 서비스 계정 JSON 경로
     private static final String FCM_URL = "https://fcm.googleapis.com/v1/projects/dependable-glow-439512-m5/messages:send";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -41,9 +39,13 @@ public class GoogleAuthService {
      */
     public String getAccessToken() {
         try {
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("service-account.json");
+            if (inputStream == null) {
+                throw new RuntimeException("❌ service-account.json 파일을 찾을 수 없습니다.");
+            }
             // 🔹 1. 서비스 계정 JSON 파일 로드
             GoogleCredentials credentials = ServiceAccountCredentials
-                    .fromStream(new FileInputStream(SERVICE_ACCOUNT_FILE))
+                    .fromStream(inputStream)
                     .createScoped(Collections.singletonList("https://www.googleapis.com/auth/cloud-platform"));
 
             // 🔹 2. 액세스 토큰 요청
