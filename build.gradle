@@ -37,6 +37,8 @@ dependencies {
     implementation 'org.springframework:spring-messaging'
     implementation 'org.springframework:spring-websocket'
 	implementation 'org.projectlombok:lombok:1.18.30'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 	runtimeOnly 'org.postgresql:postgresql'
