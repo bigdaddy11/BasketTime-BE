@@ -37,7 +37,7 @@ public class PushNotificationScheduler {
     }
 
     // ✅ 10분마다 실행 (600,000ms = 10분)
-    @Scheduled(fixedRate = 600000)
+    //@Scheduled(fixedRate = 600000)
     public void sendNewCommentNotifications() {
         LocalDateTime tenMinutesAgo = LocalDateTime.now().minusMinutes(10);
 
@@ -69,7 +69,7 @@ public class PushNotificationScheduler {
         }
     }
 
-    @Scheduled(fixedRate = 600000) // 10분마다 실행
+    //@Scheduled(fixedRate = 600000) // 10분마다 실행
     public void sendNewMessageNotifications() {
         LocalDateTime tenMinutesAgo = LocalDateTime.now().minusMinutes(10);
 
